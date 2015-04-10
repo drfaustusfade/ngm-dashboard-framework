@@ -178,9 +178,9 @@ angular.module('adf')
             }
 
             if (model) {
-              if (!model.title){
-                model.title = 'Dashboard';
-              }
+              // if (!model.title){
+              //   model.title = 'Dashboard';
+              // }
               $scope.model = model;
             } else {
               $log.error('could not find or create model');
