@@ -25,7 +25,7 @@
 'use strict';
 
 angular.module('adf')
-  .directive('adfWidget', function($log, $modal, dashboard, adfTemplatePath) {
+  .directive('adfWidget', ['$log', '$modal', 'dashboard', 'adfTemplatePath', function($log, $modal, dashboard, adfTemplatePath) {
 
     function stringToBoolean(string){
       switch(angular.isDefined(string) ? string.toLowerCase() : null){
@@ -144,4 +144,4 @@ angular.module('adf')
       }
     };
 
-  });
+  }]);
