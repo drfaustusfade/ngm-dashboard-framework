@@ -1,6 +1,6 @@
 {
-  "name": "experiments-adf",
-  "version": "0.7.3",
+  "name": "angular-dashboard-framework",
+  "version": "0.9.0-SNAPSHOT",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-angular-templates": "~0.5.7",
