@@ -58,7 +58,7 @@ angular.module('adf')
   //   );
   //   };
   // })
-  .directive('adfDashboard', function ($rootScope, $log, $modal, dashboard, adfTemplatePath) {
+  .directive('adfDashboard', ['$rootScope', '$log', '$modal', 'dashboard', 'adfTemplatePath' , function ($rootScope, $log, $modal, dashboard, adfTemplatePath) {
     'use strict';
 
     function copyWidgets(source, target) {
@@ -305,4 +305,4 @@ angular.module('adf')
       },
       templateUrl: adfTemplatePath + 'dashboard.html'
     };
-  });
+  }]);

@@ -25,7 +25,7 @@
 
 /* global angular */
 angular.module("adf")
-  .directive("adfDashboardRow", function ($compile, adfTemplatePath, columnTemplate) {
+  .directive("adfDashboardRow", ['$compile', 'adfTemplatePath', 'columnTemplate', function ($compile, adfTemplatePath, columnTemplate) {
     'use strict';
 
     return {
@@ -46,4 +46,4 @@ angular.module("adf")
           }
         }
     };
-  });
+  }]);
