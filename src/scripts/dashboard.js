@@ -57,7 +57,7 @@ angular.module('adf')
   //     }
   //   );
   //   };
-  // })
+  // }) 
   .directive('adfDashboard', ['$rootScope', '$log', '$modal', 'dashboard', 'adfTemplatePath' , function ($rootScope, $log, $modal, dashboard, adfTemplatePath) {
     'use strict';
 
