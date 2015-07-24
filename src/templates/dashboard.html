@@ -1,0 +1,12 @@
+<div class="dashboard-container">
+
+  <div ng-include src="model.titleTemplateUrl"></div>
+  <div class="dashboard">
+    <adf-dashboard-row row="row"
+                       adf-model="model"
+                       options="options"
+                       ng-repeat="row in model.rows"
+    />
+  </div>
+
+</div>
