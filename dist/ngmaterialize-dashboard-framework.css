@@ -1,7 +1,7 @@
 /**
  The MIT License
 
- Copyright (c) 2015, Sebastian Sdorra
+ Copyright (c) 2015, Patrick Fitzgerald
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,57 +27,76 @@
   display: none !important;
 }
 
-.adf-move {
-  cursor: move;
-  cursor: -webkit-grabbing;
-}
-
-.edit .column {
-  min-height: 120px;
-  border: 1px #ccc dashed;
-  padding-top: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-
-pre.edit {
-  margin-top: 15px;
-}
-
-.column .placeholder {
-  opacity: 0.4;
-  background: #E8E8E8;
-  border: 1px dashed #505050;
-  margin-bottom: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
-
-.widget h3 a {
-  text-decoration: none;
-}
-
-.dashboard-container h1 a {
-  text-decoration: none;
-}
-
-.padding-bottom {
-  padding-bottom: 5px;
-}
-
-.adf-flip {
-  -moz-transform: scaleX(-1);
-  -o-transform: scaleX(-1);
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-  filter: FlipH;
-  -ms-filter: "FlipH";
-}
 /*
- modal dialog in fullscreen
+ stats card
 */
-.dashboard-modal.widget-fullscreen .modal-dialog {
- width: 98%;
+.stats-card{
+  display:block;
+  position:relative;
+  overflow:hidden;
+}
+.stats-card>i{
+  position:absolute;
+  font-size:6rem;
+  right:0;
+  bottom:-1rem;
+}
+.stats-card>i[class*=ion-], .stats-card>i[class*=mdi-]{
+  bottom:-2.4rem;
+}
+.stats-card .count{
+  position:relative;
+  font-weight:700;
+  font-size:2rem;
+  line-height:2rem;
+}
+.stats-card .name{
+  position:relative;
+  font-size:1rem;
+  line-height:1rem;
+}
+.stats-card .graph{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+}
+.stats-card .progress{
+  position:absolute;
+  border-radius:0;
+  margin:0;
+  bottom:0;
+  left:0;
+  right:0;
+  box-shadow:none;
+}
+.stats-card .progress.top{
+  bottom:auto;
+  top:0;
+}
+.stats-card .progress.background{
+  top:0;
+  height:100%;
+}
+.stats-card .progress.background>div{
+  height:100%;
+}
+
+/*
+ stats card large
+*/
+.stats-card.large{
+  padding:1.6rem;
+}
+.stats-card.large>i{
+  font-size:8rem;
+  bottom:-1.3rem;
+}
+.stats-card.large .count{
+  font-size:3rem;
+  line-height:3rem;
+}
+.stats-card.large .name{
+  font-size:1.2rem;
+  line-height:1.2rem;
 }

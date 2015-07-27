@@ -110,7 +110,152 @@ gulp.task('docs', function(){
     .pipe(gulp.dest('./dist/docs'));
 });
 
+/** build sample **/
+gulp.task('install-widgets', function(){
+  return gulp.src('sample/widgets/*/bower.json')
+             .pipe($.install());
+});
+
+gulp.task('widget-templates', ['install-widgets'], function(){
+  var opts = {
+    root: '{widgetsPath}',
+    module: 'sample'
+  };
+  return gulp.src('sample/widgets/*/src/*.html')
+             .pipe($.minifyHtml(minifyHtmlOptions))
+             .pipe($.angularTemplatecache('widgets.js', opts))
+             .pipe(gulp.dest('.tmp'));
+});
+
+gulp.task('sample-templates', function(){
+  var opts = {
+    root: 'partials',
+    module: 'sample'
+  };
+  return gulp.src('sample/partials/*.html')
+             .pipe($.minifyHtml(minifyHtmlOptions))
+             .pipe($.angularTemplatecache('samples.js', opts))
+             .pipe(gulp.dest('.tmp'));
+});
+
+gulp.task('dashboard-templates', function(){
+  var opts = {
+    root: '../src/templates',
+    module: 'adf'
+  };
+  return gulp.src('src/templates/*.html')
+             .pipe($.minifyHtml(minifyHtmlOptions))
+             .pipe($.angularTemplatecache('adf.js', opts))
+             .pipe(gulp.dest('.tmp'));
+});
+
+gulp.task('copy-font', function(){
+  gulp.src('sample/components/bootstrap/dist/fonts/*')
+      .pipe(gulp.dest('dist/sample/fonts'));
+});
+
+gulp.task('sample', ['widget-templates', 'sample-templates', 'dashboard-templates', 'copy-font'], function(){
+  var templates = gulp.src('.tmp/*.js', {read: false});
+  var assets = $.useref.assets();
+  gulp.src('sample/index.html')
+      // inject templates
+      .pipe($.inject(templates, {relative: true}))
+      .pipe(assets)
+      .pipe($.if('*.js', $.replace('<<adfVersion>>', pkg.version)))
+      .pipe($.if('*.js', $.ngAnnotate(annotateOptions)))
+      .pipe($.if('*.js', $.uglify()))
+      .pipe($.if('*.css', $.minifyCss()))
+      .pipe($.rev())
+      .pipe(assets.restore())
+      .pipe($.useref())
+      .pipe($.revReplace())
+      .pipe(gulp.dest('dist/sample'));
+});
+
+/** livereload **/
+
+gulp.task('watch', function(){
+  var paths = [
+    'src/scripts/*.js',
+    'src/styles/*.css',
+    'src/templates/*.html',
+    'sample/*.html',
+    'sample/scripts/*.js',
+    'sample/partials/*.html',
+    'sample/widgets/*/*.js',
+    'sample/widgets/*/*.css',
+    'sample/widgets/*/*.html',
+    'sample/widgets/*/src/*.js',
+    'sample/widgets/*/src/*.css',
+    'sample/widgets/*/src/*.html'
+  ];
+  gulp.watch(paths).on('change', function(file){
+    gulp.src(file.path)
+        .pipe(connect.reload());
+  });
+});
+
+gulp.task('webserver', ['install-widgets'], function(){
+  connect.server({
+    port: 9001,
+    livereload: true,
+    // redirect / to /sample
+    middleware: function() {
+      return [
+        modRewrite([
+          '^/$ /sample/ [R]'
+        ])
+      ];
+    }
+  });
+});
+
+gulp.task('serve', ['webserver', 'watch']);
+
+/** e2e **/
+
+// The protractor task
+var protractor = require('gulp-protractor').protractor;
+
+// Start a standalone server
+var webdriver_standalone = require('gulp-protractor').webdriver_standalone;
+
+// Download and update the selenium driver
+var webdriver_update = require('gulp-protractor').webdriver_update;
+
+// Downloads the selenium webdriver
+gulp.task('webdriver_update', webdriver_update);
+
+// Start the standalone selenium server
+// NOTE: This is not needed if you reference the
+// seleniumServerJar in your protractor.conf.js
+gulp.task('webdriver_standalone', webdriver_standalone);
+
+// start webserver for e2e tests
+gulp.task('e2e-server', ['install-widgets'], function(){
+  connect.server({
+    port: 9003
+  });
+});
+
+// Setting up the test task
+gulp.task('e2e', ['e2e-server', 'webdriver_update'], function(cb) {
+  gulp.src('e2e/*Spec.js')
+      .pipe(protractor(protractorOptions))
+      .on('error', function(e) {
+        // stop webserver
+        connect.serverClose();
+        // print test results
+        console.log(e);
+      })
+      .on('end', function(){
+        // stop webserver
+        connect.serverClose();
+        cb();
+      });
+});
+
 /** shorthand methods **/
-gulp.task('all', ['build', 'docs']);
+gulp.task('all', ['build', 'docs', 'sample']);
 
 gulp.task('default', ['build']);

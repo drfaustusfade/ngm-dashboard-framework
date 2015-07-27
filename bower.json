@@ -8,6 +8,10 @@
   "ignore": [
     ".tmp",
     "dist/docs",
+    "dist/sample",
+    "e2e",
+    "node_modules",
+    "sample",
     "src",
     ".bowerrc",
     ".editorconfig",
