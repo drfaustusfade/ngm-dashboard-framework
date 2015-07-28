@@ -23,6 +23,8 @@
     "package.json",
     "protractor.conf.js"
   ],
+  "location": "https://github.com/pfitzpaddy/ngmaterialize-dashboard-framework",
+  "licence": "MIT",  
   "keywords": [
     "dashboard",
     "angular",
