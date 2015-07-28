@@ -34,10 +34,33 @@ angular.module('sample-05', ['adf', 'LocalStorageModule'])
       title: "Sample 05",
       rows: [{
         columns: [{
-          styleClass: "s4 m4 l4",
+          styleClass: "s12 m12 l4",
           widgets: [{
             type: "linklist",
-            card: "card blue-grey darken-1 small",
+            card: "card-panel stats-card indigo lighten-2 indigo-text text-lighten-5",
+            // card: "card blue-grey darken-1 small",
+            config: {
+              links: [{
+                title: "SCM-Manager",
+                href: "http://www.scm-manager.org"
+              }]
+            },
+            title: "Links"
+          },{
+            type: "linklist",
+            card: "card-panel stats-card yellow lighten-2 yellow-text text-lighten-5",
+            // card: "card blue-grey darken-1 small",
+            config: {
+              links: [{
+                title: "SCM-Manager",
+                href: "http://www.scm-manager.org"
+              }]
+            },
+            title: "Links"
+          },{
+            type: "linklist",
+            card: "card-panel stats-card teal lighten-2 teal-text text-lighten-5",
+            // card: "card blue-grey darken-1 small",
             config: {
               links: [{
                 title: "SCM-Manager",
@@ -47,7 +70,7 @@ angular.module('sample-05', ['adf', 'LocalStorageModule'])
             title: "Links"
           }]
         }, {
-          styleClass: "s8 m8 l8",
+          styleClass: "s12 m12 l8",
           widgets: [{
             type: "randommsg",
             card: "card small",
