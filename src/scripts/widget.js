@@ -24,9 +24,8 @@
 
 'use strict';
 
-angular.module('adf')
-  // .directive('adfWidget', function($log, $modal, dashboard, adfTemplatePath) {
-  .directive('adfWidget', function($log, dashboard, adfTemplatePath) {
+angular.module('ngm')
+  .directive('ngmWidget', function($log, dashboard, ngmTemplatePath) {
 
     function preLink($scope){
       var definition = $scope.definition;
@@ -85,7 +84,7 @@ angular.module('adf')
       replace: true,
       restrict: 'EA',
       transclude: false,
-      templateUrl: adfTemplatePath + 'widget.html',
+      templateUrl: ngmTemplatePath + 'widget.html',
       scope: {
         definition: '=',
         col: '=column',

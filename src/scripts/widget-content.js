@@ -24,8 +24,8 @@
 
 'use strict';
 
-angular.module('adf')
-  .directive('adfWidgetContent', function($log, $q, $sce, $http, $templateCache,
+angular.module('ngm')
+  .directive('ngmWidgetContent', function($log, $q, $sce, $http, $templateCache,
     $compile, $controller, $injector, dashboard) {
 
     function parseUrl(url){

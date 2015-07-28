@@ -24,9 +24,8 @@
 
 'use strict';
 
-// angular.module('adf', ['adf.provider', 'ui.bootstrap'])
-angular.module('adf', ['adf.provider'])
-  .value('adfTemplatePath', '../src/templates/')
-  .value('rowTemplate', '<adf-dashboard-row row="row" adf-model="adfModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
-  .value('columnTemplate', '<adf-dashboard-column column="column" adf-model="adfModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('adfVersion', '<<adfVersion>>');
+angular.module('ngm', ['ngm.provider'])
+  .value('ngmTemplatePath', '../src/templates/')
+  .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
+  .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
+  .value('ngmVersion', '<<ngmVersion>>');

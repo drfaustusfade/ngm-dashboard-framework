@@ -24,8 +24,8 @@
 
 
 /* global angular */
-angular.module('adf')
-  .directive('adfDashboardColumn', function ($log, $compile, adfTemplatePath, rowTemplate, dashboard) {
+angular.module('ngm')
+  .directive('ngmDashboardColumn', function ($log, $compile, ngmTemplatePath, rowTemplate, dashboard) {
     'use strict';
 
     /**
@@ -78,10 +78,10 @@ angular.module('adf')
     }
 
     /**
-     * get the adf id from an html element
+     * get the ngm id from an html element
      */
     function getId(el){
-      var id = el.getAttribute('adf-id');
+      var id = el.getAttribute('ngm-id');
       return id ? parseInt(id) : -1;
     }
 
@@ -133,7 +133,7 @@ angular.module('adf')
       var el = $element[0];
       var sortable = Sortable.create(el, {
         group: 'widgets',
-        handle: '.adf-move',
+        handle: '.ngm-move',
         ghostClass: 'placeholder',
         animation: 150,
         onAdd: function(evt){
@@ -159,10 +159,10 @@ angular.module('adf')
       scope: {
         column: '=',
         editMode: '=',
-        adfModel: '=',
+        ngmModel: '=',
         options: '='
       },
-      templateUrl: adfTemplatePath + 'dashboard-column.html',
+      templateUrl: ngmTemplatePath + 'dashboard-column.html',
       link: function ($scope, $element) {
         // set id
         var col = $scope.column;
@@ -177,7 +177,7 @@ angular.module('adf')
           });
         } else {
           // enable drag and drop for widget only columns
-          applySortable($scope, $element, $scope.adfModel, col);
+          applySortable($scope, $element, $scope.ngmModel, col);
         }
       }
     };

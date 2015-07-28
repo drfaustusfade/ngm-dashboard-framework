@@ -23,7 +23,7 @@
  */
 'use strict';
 
-angular.module('sample-05', ['adf', 'LocalStorageModule'])
+angular.module('sample-05', ['ngm', 'LocalStorageModule'])
 .controller('sample05Ctrl', function($scope, localStorageService){
 
   var name = 'sample-05';
@@ -86,7 +86,7 @@ angular.module('sample-05', ['adf', 'LocalStorageModule'])
   $scope.collapsible = false;
   $scope.maximizable = false;
 
-  $scope.$on('adfDashboardChanged', function (event, name, model) {
+  $scope.$on('ngmDashboardChanged', function (event, name, model) {
     localStorageService.set(name, model);
   });
 });

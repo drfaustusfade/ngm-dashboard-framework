@@ -24,7 +24,7 @@
 
 'use strict';
 
-angular.module('adf.widget.randommsg', ['adf.provider'])
+angular.module('ngm.widget.randommsg', ['ngm.provider'])
   .config(function(dashboardProvider){
     dashboardProvider
       .widget('randommsg', {

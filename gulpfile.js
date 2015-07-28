@@ -34,7 +34,7 @@ var name = pkg.name;
 
 var templateOptions = {
   root: '../src/templates',
-  module: 'adf'
+  module: 'ngm'
 };
 
 var minifyHtmlOptions = {
@@ -44,7 +44,7 @@ var minifyHtmlOptions = {
 
 var ngdocOptions = {
   html5Mode: false,
-  title: 'ADF API Documentation'
+  title: 'ngMaterlialize API Documentation'
 };
 
 var protractorOptions = {
@@ -89,7 +89,7 @@ gulp.task('js', function(){
       .pipe($.if('*.html', $.minifyHtml(minifyHtmlOptions)))
       .pipe($.if('*.html', $.angularTemplatecache(name + '.tpl.js', templateOptions)))
       .pipe($.sourcemaps.init())
-      .pipe($.if('*.js', $.replace('<<adfVersion>>', pkg.version)))
+      .pipe($.if('*.js', $.replace('<<ngmVersion>>', pkg.version)))
       .pipe($.if('*.js', $.replace(/'use strict';/g, '')))
       .pipe($.concat(name + '.js'))
       .pipe($.headerfooter('(function(window, undefined) {\'use strict\';\n', '})(window);'))
@@ -141,11 +141,11 @@ gulp.task('sample-templates', function(){
 gulp.task('dashboard-templates', function(){
   var opts = {
     root: '../src/templates',
-    module: 'adf'
+    module: 'ngm'
   };
   return gulp.src('src/templates/*.html')
              .pipe($.minifyHtml(minifyHtmlOptions))
-             .pipe($.angularTemplatecache('adf.js', opts))
+             .pipe($.angularTemplatecache('ngm.js', opts))
              .pipe(gulp.dest('.tmp'));
 });
 
@@ -161,7 +161,7 @@ gulp.task('sample', ['widget-templates', 'sample-templates', 'dashboard-template
       // inject templates
       .pipe($.inject(templates, {relative: true}))
       .pipe(assets)
-      .pipe($.if('*.js', $.replace('<<adfVersion>>', pkg.version)))
+      .pipe($.if('*.js', $.replace('<<ngmVersion>>', pkg.version)))
       .pipe($.if('*.js', $.ngAnnotate(annotateOptions)))
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.minifyCss()))

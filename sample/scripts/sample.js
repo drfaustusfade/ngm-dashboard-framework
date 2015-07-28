@@ -24,13 +24,13 @@
 'use strict';
 
 angular.module('sample', [
-  'adf', 'adf.widget.randommsg', 
-  'adf.widget.linklist', 'LocalStorageModule',
+  'ngm', 'ngm.widget.randommsg', 
+  'ngm.widget.linklist', 'LocalStorageModule',
   'sample-05', 'ngRoute', 'countTo'
 ])
 .config(function(dashboardProvider, $routeProvider, localStorageServiceProvider){
   dashboardProvider.widgetsPath('widgets/');
-  localStorageServiceProvider.setPrefix('adf');
+  localStorageServiceProvider.setPrefix('ngm');
 
   $routeProvider.when('/sample/05', {
     templateUrl: 'partials/sample.html',

@@ -26,12 +26,12 @@
 
 /**
  * @ngdoc object
- * @name adf.dashboardProvider
+ * @name ngm.dashboardProvider
  * @description
  *
  * The dashboardProvider can be used to register structures and widgets.
  */
-angular.module('adf.provider', [])
+angular.module('ngm.provider', [])
   .provider('dashboard', function(){
 
     var widgets = {};
@@ -47,8 +47,8 @@ angular.module('adf.provider', [])
 
    /**
     * @ngdoc method
-    * @name adf.dashboardProvider#widget
-    * @methodOf adf.dashboardProvider
+    * @name ngm.dashboardProvider#widget
+    * @methodOf ngm.dashboardProvider
     * @description
     *
     * Registers a new widget.
@@ -106,8 +106,8 @@ angular.module('adf.provider', [])
 
     /**
      * @ngdoc method
-     * @name adf.dashboardProvider#widgetsPath
-     * @methodOf adf.dashboardProvider
+     * @name ngm.dashboardProvider#widgetsPath
+     * @methodOf ngm.dashboardProvider
      * @description
      *
      * Sets the path to the directory which contains the widgets. The widgets
@@ -129,8 +129,8 @@ angular.module('adf.provider', [])
 
    /**
     * @ngdoc method
-    * @name adf.dashboardProvider#structure
-    * @methodOf adf.dashboardProvider
+    * @name ngm.dashboardProvider#structure
+    * @methodOf ngm.dashboardProvider
     * @description
     *
     * Registers a new structure.
@@ -154,8 +154,8 @@ angular.module('adf.provider', [])
 
    /**
     * @ngdoc method
-    * @name adf.dashboardProvider#messageTemplate
-    * @methodOf adf.dashboardProvider
+    * @name ngm.dashboardProvider#messageTemplate
+    * @methodOf ngm.dashboardProvider
     * @description
     *
     * Changes the template for messages.
@@ -171,8 +171,8 @@ angular.module('adf.provider', [])
 
    /**
     * @ngdoc method
-    * @name adf.dashboardProvider#loadingTemplate
-    * @methodOf adf.dashboardProvider
+    * @name ngm.dashboardProvider#loadingTemplate
+    * @methodOf ngm.dashboardProvider
     * @description
     *
     * Changes the template which is displayed as
@@ -189,7 +189,7 @@ angular.module('adf.provider', [])
 
    /**
     * @ngdoc service
-    * @name adf.dashboard
+    * @name ngm.dashboard
     * @description
     *
     * The dashboard holds all options, structures and widgets.
@@ -214,8 +214,8 @@ angular.module('adf.provider', [])
 
         /**
          * @ngdoc method
-         * @name adf.dashboard#id
-         * @methodOf adf.dashboard
+         * @name ngm.dashboard#id
+         * @methodOf ngm.dashboard
          * @description
          *
          * Creates an ongoing numeric id. The method is used to create ids for

@@ -24,7 +24,7 @@
 
 'use strict';
 
-angular.module('adf.widget.linklist', ['adf.provider'])
+angular.module('ngm.widget.linklist', ['ngm.provider'])
   .config(function(dashboardProvider){
     dashboardProvider
       .widget('linklist', {
