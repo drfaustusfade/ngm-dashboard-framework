@@ -4,11 +4,11 @@
 
 ## Getting started
 
-Install bower and grunt:
+Install bower and gulp:
 
 ```bash
 npm install -g bower
-npm install -g grunt-cli
+npm install -g gulp-cli
 ```
 
 Clone the repository:
@@ -25,10 +25,10 @@ npm install
 bower install
 ```
 
-You can start the sample dashboard, by using the server grunt task:
+You can start the sample dashboard, by using the server gulp task:
 
 ```bash
-grunt server
+gulp server
 ```
 
 Now you open the sample in your browser at http://localhost:9001/sample
@@ -36,7 +36,7 @@ Now you open the sample in your browser at http://localhost:9001/sample
 Or you can create a release build of angular-dashboard-framework and the samples:
 
 ```bash
-grunt
-grunt sample
+gulp
+gulp sample
 ```
 The sample and the final build of angular-dashboard-framework are now in the dist directory.
