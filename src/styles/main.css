@@ -28,15 +28,6 @@
 }
 
 /*
-
-*/
-.progress,span.badge.new,td,th{border-radius:2px}
-.progress .indeterminate:after,.progress .indeterminate:before{background-color:inherit;position:absolute;content:''}
-.progress{position:relative;display:block;width:100%;background-color:#fff;margin:.43333rem 0 .86667rem;overflow:hidden}.progress .determinate,.progress .indeterminate{background-color:#EF5350}.progress .determinate{position:absolute;top:0;bottom:0;-webkit-transition:width .3s linear;transition:width .3s linear}.progress .indeterminate:before{top:0;left:0;bottom:0;will-change:left,right;-webkit-animation:indeterminate 2.1s cubic-bezier(.65,.815,.735,.395)infinite;animation:indeterminate 2.1s cubic-bezier(.65,.815,.735,.395)infinite}.progress .indeterminate:after{top:0;left:0;bottom:0;will-change:left,right;-webkit-animation:indeterminate-short 2.1s cubic-bezier(.165,.84,.44,1)infinite;animation:indeterminate-short 2.1s cubic-bezier(.165,.84,.44,1)infinite;-webkit-animation-delay:1.15s;animation-delay:1.15s}
-.progress{height:15px;color:#fff;background:#F9F9F9;box-shadow:inset 0 1px 2px rgba(0,0,0,.1)}.progress>div{text-align:center;background-color:#E57373;float:left;height:15px;line-height:15px}.progress.small{height:5px}.progress.small>div{height:5px;line-height:5px}.progress.tiny{height:2px}.progress.tiny>div{height:2px;line-height:2px}.progress.big{height:25px}.progress.big>div{height:25px;line-height:25px}.progress.extra{height:35px}.progress.extra>div{height:35px;line-height:35px}.progress>div.striped{background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-size:40px 40px}.progress>div.striped.active{-webkit-animation:progress-bar-stripes 2s linear infinite;animation:progress-bar-stripes 2s linear infinite}
-.progress{margin-top:.7em}
-
-/*
  stats card
 */
 .stats-card{
@@ -44,11 +35,14 @@
   position:relative;
   overflow:hidden;
 }
-.stats-card i{
+.stats-card>i{
   position:absolute;
   font-size:6rem;
   right:0;
   bottom:-1rem;
+}
+.stats-card>i[class*=ion-], .stats-card>i[class*=mdi-]{
+  bottom:-2.4rem;
 }
 .stats-card .count{
   position:relative;
@@ -67,9 +61,6 @@
   left:0;
   right:0;
 }
-.progress.tiny {
-  height: 2px;
-}
 .stats-card .progress{
   position:absolute;
   border-radius:0;
@@ -87,7 +78,7 @@
   top:0;
   height:100%;
 }
-.stats-card .progress.background div {
+.stats-card .progress.background>div{
   height:100%;
 }
 

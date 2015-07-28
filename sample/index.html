@@ -33,9 +33,9 @@
     <title>Dashboard</title>
 
     <!-- build:css css/sample.min.css -->
-    <!-- Materialize CSS -->
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="components/bootstrap/dist/css/bootstrap.css" rel="stylesheet"> -->
     <link href="components/materialize/css/materialize.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- dashboard style -->
     <link href="../src/styles/main.css" rel="stylesheet">
@@ -80,8 +80,20 @@
         <nav>
             <div class="container" ng-controller="navigationCtrl">
                 <div class="nav-wrapper">
-                  <a href="#" class="brand-logo">ngMaterialize</a>
+                  <a href="#" class="brand-logo">Logo</a>
                   <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li ng-class="navClass('sample/01')">
+                      <a href="#/sample/01">Sample 01</a>
+                    </li>
+                    <li ng-class="navClass('sample/02')">
+                      <a href="#/sample/02">Sample 02</a>
+                    </li>
+                    <li ng-class="navClass('sample/03')">
+                      <a href="#/sample/03">Sample 03</a>
+                    </li>
+                    <li ng-class="navClass('sample/04')">
+                      <a href="#/sample/04">Sample 04</a>
+                    </li>
                     <li ng-class="navClass('sample/05')">
                       <a href="#/sample/05">Sample 05</a>
                     </li>
@@ -121,13 +133,15 @@
     <script type="text/javascript" src="../src/scripts/column.js"></script>
     <script type="text/javascript" src="../src/scripts/row.js"></script>
 
-    <script type="text/javascript" src="components/angular-count-to.min.js"></script>
-
     <!-- local storage -->
     <script type="text/javascript" src="components/angular-local-storage/dist/angular-local-storage.js"></script>
 
     <!-- sample -->
     <script type="text/javascript" src="scripts/sample.js"></script>
+    <script type="text/javascript" src="scripts/sample-01.js"></script>
+    <script type="text/javascript" src="scripts/sample-02.js"></script>
+    <script type="text/javascript" src="scripts/sample-03.js"></script>
+    <script type="text/javascript" src="scripts/sample-04.js"></script>
     <script type="text/javascript" src="scripts/sample-05.js"></script>
 
     <!-- linklist widget -->
