@@ -25,12 +25,11 @@
 
 angular.module('sample', [
   'adf', 'adf.widget.randommsg', 
-  'adf.widget.linklist', 'LocalStorageModule',
+  'adf.widget.linklist',
   'sample-05', 'ngRoute', 'countTo'
 ])
-.config(function(dashboardProvider, $routeProvider, localStorageServiceProvider){
+.config(function(dashboardProvider, $routeProvider){
   dashboardProvider.widgetsPath('widgets/');
-  localStorageServiceProvider.setPrefix('adf');
 
   $routeProvider.when('/sample/05', {
     templateUrl: 'partials/sample.html',
