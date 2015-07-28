@@ -84,7 +84,6 @@ angular.module('sample-05', ['ngm', 'LocalStorageModule'])
   $scope.name = name;
   $scope.model = model;
   $scope.collapsible = false;
-  $scope.maximizable = false;
 
   $scope.$on('ngmDashboardChanged', function (event, name, model) {
     localStorageService.set(name, model);

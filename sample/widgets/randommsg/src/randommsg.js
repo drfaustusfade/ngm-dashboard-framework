@@ -94,6 +94,6 @@ angular.module('ngm.widget.randommsg', ['ngm.provider'])
       }
     };
   })
-  .controller('randommsgCtrl', function($scope, randommsgService){
+  .controller('randommsgCtrl', function($scope, $element, randommsgService){
     $scope.msg = randommsgService.get();
   });

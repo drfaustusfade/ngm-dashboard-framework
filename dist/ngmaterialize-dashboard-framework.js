@@ -835,6 +835,7 @@ angular.module('ngm')
       // local injections
       var base = {
         $scope: templateScope,
+        $element: $element.parent(),
         widget: model,
         config: model.config
       };
@@ -895,12 +896,15 @@ angular.module('ngm')
       },
       link: function($scope, $element) {
         var currentScope = compileWidget($scope, $element, null);
-        $scope.$on('widgetConfigChanged', function(){
-          currentScope = compileWidget($scope, $element, currentScope);
-        });
         $scope.$on('widgetReload', function(){
           currentScope = compileWidget($scope, $element, currentScope);
         });
+        $scope.$on('widgetConfigChanged', function(event, params){
+          // extend widget config with params
+          angular.extend($scope.model.config, params);
+          // ee-compile widget
+          currentScope = compileWidget($scope, $element, currentScope);
+        });        
       }
     };
 
