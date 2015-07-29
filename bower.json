@@ -9,7 +9,6 @@
     ".tmp",
     "dist/docs",
     "dist/sample",
-    "e2e",
     "node_modules",
     "sample",
     "src",
@@ -19,7 +18,7 @@
     ".gitmodules",
     ".jshintrc",
     "bower.json",
-    "gulpfile.js",
+    "Grunt.js",
     "package.json",
     "protractor.conf.js"
   ],
