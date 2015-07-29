@@ -61,7 +61,13 @@
     concat: {
       default: {
         src: [
-          '<%= dirs.src %>/*.js',
+          '<%= dirs.src %>/ngm.js',
+          '<%= dirs.src %>/column.js',
+          '<%= dirs.src %>/dasboard.js',
+          '<%= dirs.src %>/provider.js',
+          '<%= dirs.src %>/row.js',
+          '<%= dirs.src %>/widget-content.js',
+          '<%= dirs.src %>/widget.js',
           '.tmp/ngtemplates/templates.js'
         ],
         dest: '.tmp/concat/ngm.js'
