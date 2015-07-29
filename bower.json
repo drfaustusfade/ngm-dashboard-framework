@@ -1,6 +1,6 @@
 {
   "name": "ngmaterialize-dashboard-framework",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": [
     "dist/ngmaterialize-dashboard-framework.min.js",
     "dist/ngmaterialize-dashboard-framework.min.css"
