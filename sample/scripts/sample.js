@@ -24,9 +24,9 @@
 'use strict';
 
 angular.module('sample', [
-  'ngRoute', 'ngm', 'ngm.widget.randommsg', 
+  'ngm', 'ngm.widget.randommsg', 
   'ngm.widget.linklist', 'LocalStorageModule',
-  'sample-05', 'countTo'
+  'sample-05', 'ngRoute', 'countTo'
 ])
 .config(function(dashboardProvider, $routeProvider, localStorageServiceProvider){
   dashboardProvider.widgetsPath('widgets/');

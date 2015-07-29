@@ -25,11 +25,11 @@
 
 
 
-angular.module('ngm', ['ngm.provider'])
-  .value('ngmTemplatePath', '../src/templates/')
-  .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
-  .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.0.1');
+angular.module('adf', ['ngm.provider'])
+  .value('adfTemplatePath', '../src/templates/')
+  .value('rowTemplate', '<adf-dashboard-row row="row" adf-model="adfModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
+  .value('columnTemplate', '<adf-dashboard-column column="column" adf-model="adfModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
+  .value('adfVersion', '0.10.0-SNAPSHOT');
 
 /*
 * The MIT License
@@ -57,9 +57,20 @@ angular.module('ngm', ['ngm.provider'])
 
 
 /* global angular */
-angular.module('ngm')
-  .directive('ngmDashboardColumn', function ($log, $compile, ngmTemplatePath, rowTemplate, dashboard) {
+angular.module('adf')
+  .directive('adfDashboardColumn', ["$log", "$compile", "adfTemplatePath", "rowTemplate", "dashboard", function ($log, $compile, adfTemplatePath, rowTemplate, dashboard) {
     
+
+    /**
+     * moves a widget in between a column
+     */
+    function moveWidgetInColumn($scope, column, evt){
+      var widgets = column.widgets;
+      // move widget and apply to scope
+      $scope.$apply(function(){
+        widgets.splice(evt.newIndex, 0, widgets.splice(evt.oldIndex, 1)[0]);
+      });
+    }
 
     /**
      * finds a widget by its id in the column
@@ -100,11 +111,79 @@ angular.module('ngm')
     }
 
     /**
-     * get the ngm id from an html element
+     * get the adf id from an html element
      */
     function getId(el){
-      var id = el.getAttribute('ngm-id');
+      var id = el.getAttribute('adf-id');
       return id ? parseInt(id) : -1;
+    }
+
+    /**
+     * adds a widget to a column
+     */
+    function addWidgetToColumn($scope, model, targetColumn, evt){
+      // find source column
+      var cid = getId(evt.from);
+      var sourceColumn = findColumn(model, cid);
+
+      if (sourceColumn){
+        // find moved widget
+        var wid = getId(evt.item);
+        var widget = findWidget(sourceColumn, wid);
+
+        if (widget){
+          // add new item and apply to scope
+          $scope.$apply(function(){
+			if (!targetColumn.widgets) {
+				targetColumn.widgets = [];
+			}
+			
+            targetColumn.widgets.splice(evt.newIndex, 0, widget);
+          });
+        } else {
+          $log.warn('could not find widget with id ' + wid);
+        }
+      } else {
+        $log.warn('could not find column with id ' + cid);
+      }
+    }
+
+    /**
+     * removes a widget from a column
+     */
+    function removeWidgetFromColumn($scope, column, evt){
+      // remove old item and apply to scope
+      $scope.$apply(function(){
+        column.widgets.splice(evt.oldIndex, 1);
+      });
+    }
+
+    /**
+     * enable sortable
+     */
+    function applySortable($scope, $element, model, column){
+      // enable drag and drop
+      var el = $element[0];
+      var sortable = Sortable.create(el, {
+        group: 'widgets',
+        handle: '.adf-move',
+        ghostClass: 'placeholder',
+        animation: 150,
+        onAdd: function(evt){
+          addWidgetToColumn($scope, model, column, evt);
+        },
+        onRemove: function(evt){
+          removeWidgetFromColumn($scope, column, evt);
+        },
+        onUpdate: function(evt){
+          moveWidgetInColumn($scope, column, evt);
+        }
+      });
+
+      // destroy sortable on column destroy event
+      $element.on('$destroy', function () {
+        sortable.destroy();
+      });
     }
 
     return {
@@ -113,23 +192,29 @@ angular.module('ngm')
       scope: {
         column: '=',
         editMode: '=',
-        ngmModel: '=',
+        adfModel: '=',
         options: '='
       },
-      templateUrl: ngmTemplatePath + 'dashboard-column.html',
+      templateUrl: adfTemplatePath + 'dashboard-column.html',
       link: function ($scope, $element) {
         // set id
         var col = $scope.column;
         if (!col.cid){
           col.cid = dashboard.id();
         }
-        // be sure to tell Angular about the injected directive and push the new row directive to the column
-        $compile(rowTemplate)($scope, function(cloned) {
-          $element.append(cloned);
-        });
+
+        if (angular.isDefined(col.rows) && angular.isArray(col.rows)) {
+          // be sure to tell Angular about the injected directive and push the new row directive to the column
+          $compile(rowTemplate)($scope, function(cloned) {
+            $element.append(cloned);
+          });
+        } else {
+          // enable drag and drop for widget only columns
+          applySortable($scope, $element, $scope.adfModel, col);
+        }
       }
     };
-  });
+  }]);
 
 /*
  * The MIT License
@@ -157,13 +242,13 @@ angular.module('ngm')
 
 /**
  * @ngdoc directive
- * @name ngm.directive:ngmDashboard
+ * @name adf.directive:adfDashboard
  * @element div
  * @restrict EA
  * @scope
  * @description
  *
- * `ngmDashboard` is a directive which renders the dashboard with all its
+ * `adfDashboard` is a directive which renders the dashboard with all its
  * components. The directive requires a name attribute. The name of the
  * dashboard can be used to store the model.
  *
@@ -172,12 +257,12 @@ angular.module('ngm')
  * @param {boolean=} collapsible true to make widgets collapsible on the dashboard.
  * @param {boolean=} maximizable true to add a button for open widgets in a large modal panel.
  * @param {string=} structure the default structure of the dashboard.
- * @param {object=} ngmModel model object of the dashboard.
- * @param {function=} ngmWidgetFilter function to filter widgets on the add dialog.
+ * @param {object=} adfModel model object of the dashboard.
+ * @param {function=} adfWidgetFilter function to filter widgets on the add dialog.
  */
 
-angular.module('ngm')
-  .directive('ngmDashboard', function ($rootScope, $log, dashboard, ngmTemplatePath) {
+angular.module('adf')
+  .directive('adfDashboard', ["$rootScope", "$log", "$modal", "dashboard", "adfTemplatePath", function ($rootScope, $log, $modal, dashboard, adfTemplatePath) {
     
 
     function stringToBoolean(string){
@@ -303,6 +388,28 @@ angular.module('ngm')
       return column;
     }
 
+    /**
+     * Adds the widget to first column of the model.
+     *
+     * @param dashboard model
+     * @param widget to add to model
+     */
+    function addNewWidgetToModel(model, widget){
+      if (model){
+        var column = findFirstWidgetColumn(model);
+        if (column){
+          if (!column.widgets){
+            column.widgets = [];
+          }
+          column.widgets.unshift(widget);
+        } else {
+          $log.error('could not find first widget column');
+        }
+      } else {
+        $log.error('model is undefined');
+      }
+    }
+
     return {
       replace: true,
       restrict: 'EA',
@@ -313,22 +420,22 @@ angular.module('ngm')
         collapsible: '@',
         editable: '@',
         maximizable: '@',
-        ngmModel: '=',
-        ngmWidgetFilter: '='
+        adfModel: '=',
+        adfWidgetFilter: '='
       },
-      controller: function($scope){
+      controller: ["$scope", function($scope){
         var model = {};
         var structure = {};
         var widgetFilter = null;
         var structureName = {};
         var name = $scope.name;
 
-        // Watching for changes on ngmModel
-        $scope.$watch('ngmModel', function(oldVal, newVal) {
+        // Watching for changes on adfModel
+        $scope.$watch('adfModel', function(oldVal, newVal) {
           // has model changed or is the model attribute not set
           if (newVal !== null || (oldVal === null && newVal === null)) {
-            model = $scope.ngmModel;
-            widgetFilter = $scope.ngmWidgetFilter;
+            model = $scope.adfModel;
+            widgetFilter = $scope.adfWidgetFilter;
             if ( ! model || ! model.rows ){
               structureName = $scope.structure;
               structure = dashboard.structures[structureName];
@@ -349,7 +456,7 @@ angular.module('ngm')
                 model.title = 'Dashboard';
               }
               if (!model.titleTemplateUrl) {
-                model.titleTemplateUrl = ngmTemplatePath + 'dashboard-title.html';
+                model.titleTemplateUrl = adfTemplatePath + 'dashboard-title.html';
               }
               $scope.model = model;
             } else {
@@ -362,7 +469,90 @@ angular.module('ngm')
         $scope.editMode = false;
         $scope.editClass = '';
 
-      },
+        $scope.toggleEditMode = function(){
+          $scope.editMode = ! $scope.editMode;
+          if ($scope.editMode){
+            $scope.modelCopy = angular.copy($scope.adfModel, {});
+          }
+
+          if (!$scope.editMode){
+            $rootScope.$broadcast('adfDashboardChanged', name, model);
+          }
+        };
+
+        $scope.cancelEditMode = function(){
+          $scope.editMode = false;
+          $scope.modelCopy = angular.copy($scope.modelCopy, $scope.adfModel);
+          $rootScope.$broadcast('adfDashboardEditsCancelled');
+        };
+
+        // edit dashboard settings
+        $scope.editDashboardDialog = function(){
+          var editDashboardScope = $scope.$new();
+          // create a copy of the title, to avoid changing the title to
+          // "dashboard" if the field is empty
+          editDashboardScope.copy = {
+            title: model.title
+          };
+          editDashboardScope.structures = dashboard.structures;
+          var instance = $modal.open({
+            scope: editDashboardScope,
+            templateUrl: adfTemplatePath + 'dashboard-edit.html',
+            backdrop: 'static'
+          });
+          $scope.changeStructure = function(name, structure){
+            $log.info('change structure to ' + name);
+            changeStructure(model, structure);
+          };
+          editDashboardScope.closeDialog = function(){
+            // copy the new title back to the model
+            model.title = editDashboardScope.copy.title;
+            // close modal and destroy the scope
+            instance.close();
+            editDashboardScope.$destroy();
+          };
+        };
+
+        // add widget dialog
+        $scope.addWidgetDialog = function(){
+          var addScope = $scope.$new();
+          var model = $scope.model;
+          var widgets;
+          if (angular.isFunction(widgetFilter)){
+            widgets = {};
+            angular.forEach(dashboard.widgets, function(widget, type){
+              if (widgetFilter(widget, type, model)){
+                widgets[type] = widget;
+              }
+            });
+          } else {
+            widgets = dashboard.widgets;
+          }
+          addScope.widgets = widgets;
+          var opts = {
+            scope: addScope,
+            templateUrl: adfTemplatePath + 'widget-add.html',
+            backdrop: 'static'
+          };
+          var instance = $modal.open(opts);
+          addScope.addWidget = function(widget){
+            var w = {
+              type: widget,
+              config: createConfiguration(widget)
+            };
+            addNewWidgetToModel(model, w);
+            $rootScope.$broadcast('adfWidgetAdded', name, model, w);
+            // close and destroy
+            instance.close();
+            addScope.$destroy();
+          };
+          addScope.closeDialog = function(){
+            // close and destroy
+            instance.close();
+            addScope.$destroy();
+          };
+        };
+      }],
       link: function ($scope, $element, $attr) {
         // pass options to scope
         var options = {
@@ -376,9 +566,9 @@ angular.module('ngm')
         }
         $scope.options = options;
       },
-      templateUrl: ngmTemplatePath + 'dashboard.html'
+      templateUrl: adfTemplatePath + 'dashboard.html'
     };
-  });
+  }]);
 
 /*
  * The MIT License
@@ -408,7 +598,7 @@ angular.module('ngm')
 
 /**
  * @ngdoc object
- * @name ngm.dashboardProvider
+ * @name adf.dashboardProvider
  * @description
  *
  * The dashboardProvider can be used to register structures and widgets.
@@ -429,8 +619,8 @@ angular.module('ngm.provider', [])
 
    /**
     * @ngdoc method
-    * @name ngm.dashboardProvider#widget
-    * @methodOf ngm.dashboardProvider
+    * @name adf.dashboardProvider#widget
+    * @methodOf adf.dashboardProvider
     * @description
     *
     * Registers a new widget.
@@ -488,8 +678,8 @@ angular.module('ngm.provider', [])
 
     /**
      * @ngdoc method
-     * @name ngm.dashboardProvider#widgetsPath
-     * @methodOf ngm.dashboardProvider
+     * @name adf.dashboardProvider#widgetsPath
+     * @methodOf adf.dashboardProvider
      * @description
      *
      * Sets the path to the directory which contains the widgets. The widgets
@@ -511,8 +701,8 @@ angular.module('ngm.provider', [])
 
    /**
     * @ngdoc method
-    * @name ngm.dashboardProvider#structure
-    * @methodOf ngm.dashboardProvider
+    * @name adf.dashboardProvider#structure
+    * @methodOf adf.dashboardProvider
     * @description
     *
     * Registers a new structure.
@@ -536,8 +726,8 @@ angular.module('ngm.provider', [])
 
    /**
     * @ngdoc method
-    * @name ngm.dashboardProvider#messageTemplate
-    * @methodOf ngm.dashboardProvider
+    * @name adf.dashboardProvider#messageTemplate
+    * @methodOf adf.dashboardProvider
     * @description
     *
     * Changes the template for messages.
@@ -553,8 +743,8 @@ angular.module('ngm.provider', [])
 
    /**
     * @ngdoc method
-    * @name ngm.dashboardProvider#loadingTemplate
-    * @methodOf ngm.dashboardProvider
+    * @name adf.dashboardProvider#loadingTemplate
+    * @methodOf adf.dashboardProvider
     * @description
     *
     * Changes the template which is displayed as
@@ -571,7 +761,7 @@ angular.module('ngm.provider', [])
 
    /**
     * @ngdoc service
-    * @name ngm.dashboard
+    * @name adf.dashboard
     * @description
     *
     * The dashboard holds all options, structures and widgets.
@@ -596,8 +786,8 @@ angular.module('ngm.provider', [])
 
         /**
          * @ngdoc method
-         * @name ngm.dashboard#id
-         * @methodOf ngm.dashboard
+         * @name adf.dashboard#id
+         * @methodOf adf.dashboard
          * @description
          *
          * Creates an ongoing numeric id. The method is used to create ids for
@@ -637,8 +827,8 @@ angular.module('ngm.provider', [])
 
 
 /* global angular */
-angular.module('ngm')
-  .directive('ngmDashboardRow', function ($compile, ngmTemplatePath, columnTemplate) {
+angular.module('adf')
+  .directive('adfDashboardRow', ["$compile", "adfTemplatePath", "columnTemplate", function ($compile, adfTemplatePath, columnTemplate) {
     
 
     return {
@@ -646,11 +836,11 @@ angular.module('ngm')
       replace: true,
       scope: {
         row: '=',
-        ngmModel: '=',
+        adfModel: '=',
         editMode: '=',
         options: '='
       },
-      templateUrl: ngmTemplatePath + 'dashboard-row.html',
+      templateUrl: adfTemplatePath + 'dashboard-row.html',
       link: function ($scope, $element) {
         if (angular.isDefined($scope.row.columns) && angular.isArray($scope.row.columns)) {
           $compile(columnTemplate)($scope, function(cloned) {
@@ -659,7 +849,7 @@ angular.module('ngm')
         }
       }
     };
-  });
+  }]);
 
 /*
  * The MIT License
@@ -687,8 +877,8 @@ angular.module('ngm')
 
 
 
-angular.module('ngm')
-  .directive('ngmWidgetContent', function($log, $q, $sce, $http, $templateCache,
+angular.module('adf')
+  .directive('adfWidgetContent', ["$log", "$q", "$sce", "$http", "$templateCache", "$compile", "$controller", "$injector", "dashboard", function($log, $q, $sce, $http, $templateCache,
     $compile, $controller, $injector, dashboard) {
 
     function parseUrl(url){
@@ -750,7 +940,6 @@ angular.module('ngm')
       // local injections
       var base = {
         $scope: templateScope,
-        $element: $element.parent(),
         widget: model,
         config: model.config
       };
@@ -811,19 +1000,16 @@ angular.module('ngm')
       },
       link: function($scope, $element) {
         var currentScope = compileWidget($scope, $element, null);
+        $scope.$on('widgetConfigChanged', function(){
+          currentScope = compileWidget($scope, $element, currentScope);
+        });
         $scope.$on('widgetReload', function(){
           currentScope = compileWidget($scope, $element, currentScope);
         });
-        $scope.$on('widgetConfigChanged', function(event, params){
-          // extend widget config with params
-          angular.extend($scope.model.config, params);
-          // ee-compile widget
-          currentScope = compileWidget($scope, $element, currentScope);
-        });        
       }
     };
 
-  });
+  }]);
 
 /*
  * The MIT License
@@ -851,14 +1037,22 @@ angular.module('ngm')
 
 
 
-angular.module('ngm')
-  .directive('ngmWidget', function($log, dashboard, ngmTemplatePath) {
+angular.module('adf')
+  .directive('adfWidget', ["$log", "$modal", "dashboard", "adfTemplatePath", function($log, $modal, dashboard, adfTemplatePath) {
 
     function preLink($scope){
       var definition = $scope.definition;
       if (definition) {
         var w = dashboard.widgets[definition.type];
         if (w) {
+          // pass title
+          if (!definition.title){
+            definition.title = w.title;
+          }
+
+          if (!definition.titleTemplateUrl) {
+            definition.titleTemplateUrl = adfTemplatePath + 'widget-title.html';
+          }
 
           // set id for sortable
           if (!definition.wid){
@@ -898,9 +1092,44 @@ angular.module('ngm')
     function postLink($scope, $element) {
       var definition = $scope.definition;
       if (definition) {
+        // bind close function
+        $scope.close = function() {
+          var column = $scope.col;
+          if (column) {
+            var index = column.widgets.indexOf(definition);
+            if (index >= 0) {
+              column.widgets.splice(index, 1);
+            }
+          }
+          $element.remove();
+        };
+
         // bind reload function
         $scope.reload = function(){
           $scope.$broadcast('widgetReload');
+        };
+
+        // bind edit function
+        $scope.edit = function() {
+          var editScope = $scope.$new();
+
+          var opts = {
+            scope: editScope,
+            templateUrl: adfTemplatePath + 'widget-edit.html',
+            backdrop: 'static'
+          };
+
+          var instance = $modal.open(opts);
+          editScope.closeDialog = function() {
+            instance.close();
+            editScope.$destroy();
+
+            var widget = $scope.widget;
+            if (widget.edit && widget.edit.reload){
+              // reload content after edit dialog is closed
+              $scope.$broadcast('widgetConfigChanged');
+            }
+          };
         };
       } else {
         $log.debug('widget not found');
@@ -911,7 +1140,7 @@ angular.module('ngm')
       replace: true,
       restrict: 'EA',
       transclude: false,
-      templateUrl: ngmTemplatePath + 'widget.html',
+      templateUrl: adfTemplatePath + 'widget.html',
       scope: {
         definition: '=',
         col: '=column',
@@ -920,9 +1149,25 @@ angular.module('ngm')
         widgetState: '='
       },
 
-      controller: function ($scope) {
-        // 
-      },
+      controller: ["$scope", function ($scope) {
+        $scope.openFullScreen = function() {
+          var definition = $scope.definition;
+          var fullScreenScope = $scope.$new();
+          var opts = {
+            scope: fullScreenScope,
+            templateUrl: adfTemplatePath + 'widget-fullscreen.html',
+            size: definition.modalSize || 'lg', // 'sm', 'lg'
+            backdrop: 'static',
+            windowClass: (definition.fullScreen) ? 'dashboard-modal widget-fullscreen' : 'dashboard-modal'
+          };
+
+          var instance = $modal.open(opts);
+          fullScreenScope.closeDialog = function () {
+            instance.close();
+            fullScreenScope.$destroy();
+          };
+        };
+      }],
 
       compile: function compile(){
 
@@ -937,10 +1182,15 @@ angular.module('ngm')
       }
     };
 
-  });
+  }]);
 
-angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=col ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
+angular.module("adf").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div adf-id={{column.cid}} class=column ng-class=column.styleClass ng-model=column.widgets> <adf-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column edit-mode=editMode options=options widget-state=widgetState>  </adf-widget></div> ");
+$templateCache.put("../src/templates/dashboard-edit.html","<div class=modal-header> <button type=button class=close ng-click=closeDialog() aria-hidden=true>&times;</button> <h4 class=modal-title>Edit Dashboard</h4> </div> <div class=modal-body> <form role=form> <div class=form-group> <label for=dashboardTitle>Title</label> <input type=text class=form-control id=dashboardTitle ng-model=copy.title required> </div> <div class=form-group> <label>Structure</label> <div class=radio ng-repeat=\"(key, structure) in structures\"> <label> <input type=radio value={{key}} ng-model=model.structure ng-change=\"changeStructure(key, structure)\"> {{key}} </label> </div> </div> </form> </div> <div class=modal-footer> <button type=button class=\"btn btn-primary\" ng-click=closeDialog()>Close</button> </div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html","<h3 class=\"header red-text text-lighten-2\"> {{model.title}} </h3> ");
-$templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row></div> </div> ");
-$templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);
+$templateCache.put("../src/templates/dashboard-title.html","<h1> {{model.title}} <span style=\"font-size: 16px\" class=pull-right> <a href ng-if=editMode title=\"add new widget\" ng-click=addWidgetDialog()> <i class=\"glyphicon glyphicon-plus-sign\"></i> </a> <a href ng-if=editMode title=\"edit dashboard\" ng-click=editDashboardDialog()> <i class=\"glyphicon glyphicon-cog\"></i> </a> <a href ng-if=options.editable title=\"{{editMode ? \'save changes\' : \'enable edit mode\'}}\" ng-click=toggleEditMode()> <i class=glyphicon x-ng-class=\"{\'glyphicon-edit\' : !editMode, \'glyphicon-save\' : editMode}\"></i> </a> <a href ng-if=editMode title=\"undo changes\" ng-click=cancelEditMode()> <i class=\"glyphicon glyphicon-repeat adf-flip\"></i> </a> </span> </h1> ");
+$templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard x-ng-class=\"{\'edit\' : editMode}\"> <adf-dashboard-row row=row adf-model=model options=options ng-repeat=\"row in model.rows\" edit-mode=editMode> </adf-dashboard-row></div> </div> ");
+$templateCache.put("../src/templates/widget-add.html","<div class=modal-header> <button type=button class=close ng-click=closeDialog() aria-hidden=true>&times;</button> <h4 class=modal-title>Add new widget</h4> </div> <div class=modal-body> <div style=\"display: inline-block;\"> <dl class=dl-horizontal> <dt ng-repeat-start=\"(key, widget) in widgets\"> <a href ng-click=addWidget(key)> {{widget.title}} </a> </dt> <dd ng-repeat-end ng-if=widget.description> {{widget.description}} </dd> </dl> </div> </div> <div class=modal-footer> <button type=button class=\"btn btn-primary\" ng-click=closeDialog()>Close</button> </div>");
+$templateCache.put("../src/templates/widget-edit.html","<div class=modal-header> <button type=button class=close ng-click=closeDialog() aria-hidden=true>&times;</button> <h4 class=modal-title>{{widget.title}}</h4> </div> <div class=modal-body> <form role=form> <div class=form-group> <label for=widgetTitle>Title</label> <input type=text class=form-control id=widgetTitle ng-model=definition.title placeholder=\"Enter title\" required> </div> </form> <div ng-if=widget.edit> <adf-widget-content model=definition content=widget.edit> </adf-widget-content></div> </div> <div class=modal-footer> <button type=button class=\"btn btn-primary\" ng-click=closeDialog()>Close</button> </div>");
+$templateCache.put("../src/templates/widget-fullscreen.html","<div class=modal-header> <div class=\"pull-right widget-icons\"> <a href title=\"Reload Widget Content\" ng-if=widget.reload ng-click=reload()> <i class=\"glyphicon glyphicon-refresh\"></i> </a> <a href title=close ng-click=closeDialog()> <i class=\"glyphicon glyphicon-remove\"></i> </a> </div> <h4 class=modal-title>{{definition.title}}</h4> </div> <div class=modal-body> <adf-widget-content model=definition content=widget> </adf-widget-content></div> <div class=modal-footer> <button type=button class=\"btn btn-primary\" ng-click=closeDialog()>Close</button> </div> ");
+$templateCache.put("../src/templates/widget-title.html","<h3 class=panel-title> {{definition.title}} <span class=pull-right> <a href title=\"reload widget content\" ng-if=widget.reload ng-click=reload()> <i class=\"glyphicon glyphicon-refresh\"></i> </a>  <a href title=\"change widget location\" class=adf-move ng-if=editMode> <i class=\"glyphicon glyphicon-move\"></i> </a>  <a href title=\"collapse widget\" ng-show=\"options.collapsible && !widgetState.isCollapsed\" ng-click=\"widgetState.isCollapsed = !widgetState.isCollapsed\"> <i class=\"glyphicon glyphicon-minus\"></i> </a>  <a href title=\"expand widget\" ng-show=\"options.collapsible && widgetState.isCollapsed\" ng-click=\"widgetState.isCollapsed = !widgetState.isCollapsed\"> <i class=\"glyphicon glyphicon-plus\"></i> </a>  <a href title=\"edit widget configuration\" ng-click=edit() ng-if=editMode> <i class=\"glyphicon glyphicon-cog\"></i> </a> <a href title=\"fullscreen widget\" ng-click=openFullScreen() ng-show=options.maximizable> <i class=\"glyphicon glyphicon-fullscreen\"></i> </a>  <a href title=\"remove widget\" ng-click=close() ng-if=editMode> <i class=\"glyphicon glyphicon-remove\"></i> </a> </span> </h3> ");
+$templateCache.put("../src/templates/widget.html","<div adf-id={{definition.wid}} class=\"widget panel panel-default\"> <div class=\"panel-heading clearfix\"> <div ng-include src=definition.titleTemplateUrl></div> </div> <div class=panel-body collapse=widgetState.isCollapsed> <adf-widget-content model=definition content=widget> </adf-widget-content></div> </div> ");}]);})(window);
