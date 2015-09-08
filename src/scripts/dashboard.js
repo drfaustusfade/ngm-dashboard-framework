@@ -190,6 +190,11 @@ angular.module('ngm')
         var structureName = {};
         var name = $scope.name;
 
+        // Update widget configs with broadcast
+        $scope.adfModel.updateWidgets = function(params){
+          $scope.$broadcast( 'updateWidgetConfigs', params );
+        }        
+
         // Watching for changes on ngmModel
         $scope.$watch('ngmModel', function(oldVal, newVal) {
           // has model changed or is the model attribute not set

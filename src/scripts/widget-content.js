@@ -152,10 +152,13 @@ angular.module('ngm')
           currentScope = compileWidget($scope, $element, currentScope);
         });
         $scope.$on('widgetConfigChanged', function(event, params){
-          // extend widget config with params
-          angular.extend($scope.model.config, params);
-          // ee-compile widget
-          currentScope = compileWidget($scope, $element, currentScope);
+          // Confirm this approach!
+          if ( $scope.model.widget === params.widget ) {
+            // extend widget config with params
+            angular.extend( $scope.model.config, params.config );
+            // ee-compile widget
+            currentScope = compileWidget( $scope, $element, currentScope );
+          }
         });        
       }
     };
