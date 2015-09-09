@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.0.1');
+  .value('ngmVersion', '0.0.3');
 
 /*
 * The MIT License
@@ -322,6 +322,11 @@ angular.module('ngm')
         var widgetFilter = null;
         var structureName = {};
         var name = $scope.name;
+
+        // Update widget configs with broadcast
+        $scope.adfModel.updateWidgets = function(params){
+          $scope.$broadcast( 'updateWidgetConfigs', params );
+        }        
 
         // Watching for changes on ngmModel
         $scope.$watch('ngmModel', function(oldVal, newVal) {
@@ -815,10 +820,13 @@ angular.module('ngm')
           currentScope = compileWidget($scope, $element, currentScope);
         });
         $scope.$on('widgetConfigChanged', function(event, params){
-          // extend widget config with params
-          angular.extend($scope.model.config, params);
-          // ee-compile widget
-          currentScope = compileWidget($scope, $element, currentScope);
+          // Confirm this approach!
+          if ( $scope.model.widget === params.widget ) {
+            // extend widget config with params
+            angular.extend( $scope.model.config, params.config );
+            // ee-compile widget
+            currentScope = compileWidget( $scope, $element, currentScope );
+          }
         });        
       }
     };

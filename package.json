@@ -1,6 +1,6 @@
 {
-  "name": "ngmaterialize-dashboard-framework",
-  "version": "0.0.1",
+  "name": "ngm-dashboard-framework",
+  "version": "0.0.3",
   "devDependencies": {
     "connect-modrewrite": "^0.8.1",
     "del": "^1.1.1",

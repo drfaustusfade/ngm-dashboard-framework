@@ -1,9 +1,9 @@
 {
-  "name": "ngmaterialize-dashboard-framework",
-  "version": "0.0.2",
+  "name": "ngm-dashboard-framework",
+  "version": "0.0.3",
   "main": [
-    "dist/ngmaterialize-dashboard-framework.js",
-    "dist/ngmaterialize-dashboard-framework.css"
+    "dist/ngm-dashboard-framework.js",
+    "dist/ngm-dashboard-framework.css"
   ],
   "ignore": [
     ".tmp",
@@ -23,7 +23,7 @@
     "package.json",
     "protractor.conf.js"
   ],
-  "location": "https://github.com/pfitzpaddy/ngmaterialize-dashboard-framework",
+  "location": "https://github.com/pfitzpaddy/ngm-dashboard-framework",
   "licence": "MIT",  
   "keywords": [
     "dashboard",
