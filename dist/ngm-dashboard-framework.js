@@ -2,7 +2,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2015, Sebastian Sdorra
+ * Copyright (c) 2015, Patrick Fitzgerald
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ angular.module('ngm', ['ngm.provider'])
 /*
 * The MIT License
 *
-* Copyright (c) 2015, Sebastian Sdorra
+* Copyright (c) 2015, Patrick Fitzgerald
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -134,7 +134,7 @@ angular.module('ngm')
 /*
  * The MIT License
  *
- * Copyright (c) 2015, Sebastian Sdorra
+ * Copyright (c) 2015, Patrick Fitzgerald
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -324,7 +324,7 @@ angular.module('ngm')
         var name = $scope.name;
 
         // Update widget configs with broadcast
-        $scope.adfModel.updateWidgets = function(params){
+        $scope.ngmModel.updateWidgets = function(params){
           $scope.$broadcast( 'updateWidgetConfigs', params );
         }        
 
@@ -388,7 +388,7 @@ angular.module('ngm')
 /*
  * The MIT License
  *
- * Copyright (c) 2015, Sebastian Sdorra
+ * Copyright (c) 2015, Patrick Fitzgerald
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -619,7 +619,7 @@ angular.module('ngm.provider', [])
 /*
 * The MIT License
 *
-* Copyright (c) 2015, Sebastian Sdorra
+* Copyright (c) 2015, Patrick Fitzgerald
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -669,7 +669,7 @@ angular.module('ngm')
 /*
  * The MIT License
  *
- * Copyright (c) 2015, Sebastian Sdorra
+ * Copyright (c) 2015, Patrick Fitzgerald
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -836,7 +836,7 @@ angular.module('ngm')
 /*
  * The MIT License
  *
- * Copyright (c) 2015, Sebastian Sdorra
+ * Copyright (c) 2015, Patrick Fitzgerald
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
