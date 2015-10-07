@@ -43,5 +43,8 @@ angular.module('ngm.widget.linklist', ['ngm.provider'])
     if (!config.links){
       config.links = [];
     }
-    this.links = config.links;
+    $scope.data = config.data;
+    $scope.links = config.links;
+
+    console.log($scope)
   });

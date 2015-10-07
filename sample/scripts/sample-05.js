@@ -40,6 +40,7 @@ angular.module('sample-05', ['ngm', 'LocalStorageModule'])
             card: "card-panel stats-card indigo lighten-2 indigo-text text-lighten-5",
             // card: "card blue-grey darken-1 small",
             config: {
+              data: 1200,
               links: [{
                 title: "SCM-Manager",
                 href: "http://www.scm-manager.org"
@@ -51,6 +52,7 @@ angular.module('sample-05', ['ngm', 'LocalStorageModule'])
             card: "card-panel stats-card yellow lighten-2 yellow-text text-lighten-5",
             // card: "card blue-grey darken-1 small",
             config: {
+              data: 1201,
               links: [{
                 title: "SCM-Manager",
                 href: "http://www.scm-manager.org"
@@ -62,6 +64,7 @@ angular.module('sample-05', ['ngm', 'LocalStorageModule'])
             card: "card-panel stats-card teal lighten-2 teal-text text-lighten-5",
             // card: "card blue-grey darken-1 small",
             config: {
+              data: 1202,
               links: [{
                 title: "SCM-Manager",
                 href: "http://www.scm-manager.org"
