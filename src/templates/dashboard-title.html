@@ -1,8 +1,28 @@
-<div class="{{ model.title.divClass }}" style="{{ model.title.divStyle }}">
-	<h2 class="{{ model.title.titleClass }}" style="{{ model.title.titleStyle }}">
-	  	{{ model.title.title }}
+<div class="{{ model.header.div.class }}" style="{{ model.header.div.style }}">
+	<h2 class="{{ model.header.title.class }}" style="{{ model.header.title.style }}">
+	  	{{ model.header.title.title }}
 	</h2>
-	<p class="{{ model.title.subtitleClass }}" style="{{ model.title.subtitleStyle }}">
-		{{ model.title.subtitle }}
-	</p>
+	<div style="display:inline;">
+		<p class="{{ model.header.subtitle.class }}" style="{{ model.header.subtitle.style }}">
+			{{ model.header.subtitle.title }}
+		</p>
+		<div class="{{ model.header.download.class }}" style="{{ model.header.download.style }}">
+
+			<!-- download div container -->
+			<div ng-repeat="download in model.header.download.downloads">
+
+				<!-- ngm dashboard directive -->
+				<ngm-dashboard-download
+					icon="download.icon"
+					type="download.type"
+					hover="download.hover"
+					filename="download.filename"
+					dataKey="download.dataKey"
+					request="download.request" 
+					metrics="download.metrics">
+				</ngm-dashboard-download>
+
+			</div>
+		</div>
+	</div>	
 </div>

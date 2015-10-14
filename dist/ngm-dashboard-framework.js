@@ -177,6 +177,201 @@ angular.module('ngm')
  */
 
 angular.module('ngm')
+  // toggles accordian classes for 
+  .directive('ngmMenu', function() {
+
+    return {
+      
+      // Restrict it to be an attribute in this case
+      restrict: 'A',
+      
+      // responsible for registering DOM listeners as well as updating the DOM
+      link: function(scope, el, attr) {
+
+        // set initial menu style - has to be a better way?
+        setTimeout(function(){
+
+          // For all itmes
+          $('.side-menu').find('li').each(function(i, d) {
+
+            // find the row that is active
+            if ($(d).attr('class').search('active') > 0) {
+
+              // set list header
+              $(d).closest('.bold').attr('class', 'bold active');
+              
+              // set z-depth-1
+              $(d).closest('.bold').find('a').attr('class', 
+                  $(d).closest('.bold').find('a').attr('class') + ' z-depth-1' );
+
+              // slide down list
+              $(d).closest('.collapsible-body').slideDown();
+              $(d).closest('.collapsible-body').attr('class',
+                $(d).closest('.collapsible-body').attr('class') + ' active');
+            }
+          });
+
+        }, 0);
+
+        // on element click
+        el.bind( 'click', function( $event ) {
+          
+          // toggle list 
+          el.toggleClass('active');
+          // toggle list 
+          el.find('.collapsible-header').toggleClass('z-depth-1');
+
+          // toggle list rows active
+          el.find('.collapsible-body').toggleClass('active');
+
+          // toggle list rows animation
+          if (el.find('.collapsible-body').hasClass('active')) {
+            el.find('.collapsible-body').slideDown();
+          } else {
+            el.find('.collapsible-body').slideUp();
+          }
+          
+        });
+      }
+    };
+  })
+  .directive('ngmDashboardDownload',  function(dashboard) {
+
+    // get $http
+    var initInjector = angular.injector(['ng']);
+    var $http = initInjector.get('$http');
+
+    // client side download    
+    var download = {
+  
+      // prepare and stream CSV to client      
+      'csv': function(filename, request, dataKey){
+
+        // get data
+        $http(request)
+          .success(function(data){
+
+            // datatype
+            var csvHeader;
+            var type = 'data:text/csv;charset=utf-8';
+
+            // convert json to array
+            var rows = data[dataKey].map(function (row) {
+
+              // csv headers
+              csvHeader = [];
+              var record = [];
+
+              // access each value
+              angular.forEach(row, function(d, key){
+
+                // create flat array
+                csvHeader.push(key);
+                record.push(d);
+
+              });
+
+              // join as csv string
+              var csvRow = record.join()
+
+              // return
+              return csvRow
+
+            });
+
+            // compile csv data
+            var csvData = [];
+                csvData.push(csvHeader.join());
+                csvData.push(rows.join('\n'));
+
+            // create element and add csv string
+            var el = document.createElement('a');
+                el.href = 'data:attachment/csv,' + encodeURIComponent(csvData);
+                el.target = '_blank';
+                el.download = filename + '.csv';
+
+            // append, download & remove
+            document.body.appendChild(el);
+            el.click();
+            el.remove();
+
+          })
+          .error(function(){
+            deferred.reject();
+          });
+      },
+
+      // client side PDF generation
+      'pdf': function(filename, request, dataKey){
+        console.log('PDF');
+      },
+
+      // writes metrics to rest api
+      'setMetrics': function(request){
+        $http(request)
+          .success(function(data){
+          }).error(function(){
+            deferred.reject();
+          });
+      }
+
+    }
+
+    return {
+      
+      // element or attrbute
+      restrict: 'EA',
+
+      replace: true,
+
+      template: '<a class="tooltipped" data-position="top" data-delay="50" data-tooltip="{{ hover }}" style="color: {{ icon.color }}"><i class="{{ icon.size }} material-icons">{{ icon.type }}</i></a>',      
+
+      scope: {
+        icon: '=',
+        type: '=',
+        hover: '=',
+        dataKey: '=',
+        filename: '=',
+        request: '=',
+        metrics: '='
+      },
+
+      // onclick
+      link: function(scope, el, attr) {
+
+        // init tooltip
+        $('.tooltipped').tooltip({
+          tooltip: 'Download CSV'
+        });
+
+        // set defaults
+        scope.icon = {
+          type: scope.icon && scope.icon.type ? scope.icon.type : 'ic_assignment_returned',
+          color: scope.icon && scope.icon.color ? scope.icon.color : '',
+          size: scope.icon && scope.icon.size ? scope.icon.size : 'small'
+        }
+        scope.type = scope.type ? scope.type : 'csv';
+        scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type;
+        scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
+        scope.filename = scope.filename ? scope.filename : moment().format();        
+        
+        // bind download event
+        el.bind( 'click', function($e) {
+
+          // prepare download
+          download[scope.type](scope.filename, scope.request, scope.dataKey);
+
+          // record metrics
+          if (scope.metrics) {
+            download.setMetrics(scope.metrics);
+          }
+
+        });
+
+      }
+    }
+
+  })
   .directive('ngmDashboard', function ($rootScope, $log, dashboard, ngmTemplatePath) {
     
 
@@ -575,6 +770,35 @@ angular.module('ngm.provider', [])
     };
 
    /**
+    * @ngdoc method
+    * @name ngm.dashboardProvider#getData
+    * @methodOf ngm.dashboardProvider
+    * @description
+    *
+    * Fetches data using $http
+    *
+    * @param {object} $http request
+    *
+    * @returns {deferred.promise} self
+    */
+    this.getData = function(request){
+      var initInjector = angular.injector(['ng']);
+      var $q = initInjector.get('$q');
+      var $http = initInjector.get('$http');
+
+      var deferred = $q.defer();
+      $http(request)
+        .success(function(data){
+          deferred.resolve(data);
+        })
+        .error(function(){
+          deferred.reject();
+        });
+
+      return deferred.promise;
+    };
+
+   /**
     * @ngdoc service
     * @name ngm.dashboard
     * @description
@@ -949,6 +1173,6 @@ angular.module('ngm')
 
 angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=col ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html","<div class=\"{{ model.title.divClass }}\" style=\"{{ model.title.divStyle }}\"> <h2 class=\"{{ model.title.titleClass }}\" style=\"{{ model.title.titleStyle }}\"> {{ model.title.title }} </h2> <p class=\"{{ model.title.subtitleClass }}\" style=\"{{ model.title.subtitleStyle }}\"> {{ model.title.subtitle }} </p> </div> ");
-$templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row></div> </div> ");
+$templateCache.put("../src/templates/dashboard-title.html","<div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\"> <h2 class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\"> {{ model.header.title.title }} </h2> <div style=display:inline;> <p class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\"> {{ model.header.subtitle.title }} </p> <div class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\">  <div ng-repeat=\"download in model.header.download.downloads\">  <ngm-dashboard-download icon=download.icon type=download.type hover=download.hover filename=download.filename datakey=download.dataKey request=download.request metrics=download.metrics> </ngm-dashboard-download> </div> </div> </div> </div> ");
+$templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row> </div> </div> ");
 $templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\" style=\"{{ definition.style }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);

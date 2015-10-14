@@ -44,6 +44,201 @@
  */
 
 angular.module('ngm')
+  // toggles accordian classes for 
+  .directive('ngmMenu', function() {
+
+    return {
+      
+      // Restrict it to be an attribute in this case
+      restrict: 'A',
+      
+      // responsible for registering DOM listeners as well as updating the DOM
+      link: function(scope, el, attr) {
+
+        // set initial menu style - has to be a better way?
+        setTimeout(function(){
+
+          // For all itmes
+          $('.side-menu').find('li').each(function(i, d) {
+
+            // find the row that is active
+            if ($(d).attr('class').search('active') > 0) {
+
+              // set list header
+              $(d).closest('.bold').attr('class', 'bold active');
+              
+              // set z-depth-1
+              $(d).closest('.bold').find('a').attr('class', 
+                  $(d).closest('.bold').find('a').attr('class') + ' z-depth-1' );
+
+              // slide down list
+              $(d).closest('.collapsible-body').slideDown();
+              $(d).closest('.collapsible-body').attr('class',
+                $(d).closest('.collapsible-body').attr('class') + ' active');
+            }
+          });
+
+        }, 0);
+
+        // on element click
+        el.bind( 'click', function( $event ) {
+          
+          // toggle list 
+          el.toggleClass('active');
+          // toggle list 
+          el.find('.collapsible-header').toggleClass('z-depth-1');
+
+          // toggle list rows active
+          el.find('.collapsible-body').toggleClass('active');
+
+          // toggle list rows animation
+          if (el.find('.collapsible-body').hasClass('active')) {
+            el.find('.collapsible-body').slideDown();
+          } else {
+            el.find('.collapsible-body').slideUp();
+          }
+          
+        });
+      }
+    };
+  })
+  .directive('ngmDashboardDownload',  function(dashboard) {
+
+    // get $http
+    var initInjector = angular.injector(['ng']);
+    var $http = initInjector.get('$http');
+
+    // client side download    
+    var download = {
+  
+      // prepare and stream CSV to client      
+      'csv': function(filename, request, dataKey){
+
+        // get data
+        $http(request)
+          .success(function(data){
+
+            // datatype
+            var csvHeader;
+            var type = 'data:text/csv;charset=utf-8';
+
+            // convert json to array
+            var rows = data[dataKey].map(function (row) {
+
+              // csv headers
+              csvHeader = [];
+              var record = [];
+
+              // access each value
+              angular.forEach(row, function(d, key){
+
+                // create flat array
+                csvHeader.push(key);
+                record.push(d);
+
+              });
+
+              // join as csv string
+              var csvRow = record.join()
+
+              // return
+              return csvRow
+
+            });
+
+            // compile csv data
+            var csvData = [];
+                csvData.push(csvHeader.join());
+                csvData.push(rows.join('\n'));
+
+            // create element and add csv string
+            var el = document.createElement('a');
+                el.href = 'data:attachment/csv,' + encodeURIComponent(csvData);
+                el.target = '_blank';
+                el.download = filename + '.csv';
+
+            // append, download & remove
+            document.body.appendChild(el);
+            el.click();
+            el.remove();
+
+          })
+          .error(function(){
+            deferred.reject();
+          });
+      },
+
+      // client side PDF generation
+      'pdf': function(filename, request, dataKey){
+        console.log('PDF');
+      },
+
+      // writes metrics to rest api
+      'setMetrics': function(request){
+        $http(request)
+          .success(function(data){
+          }).error(function(){
+            deferred.reject();
+          });
+      }
+
+    }
+
+    return {
+      
+      // element or attrbute
+      restrict: 'EA',
+
+      replace: true,
+
+      template: '<a class="tooltipped" data-position="top" data-delay="50" data-tooltip="{{ hover }}" style="color: {{ icon.color }}"><i class="{{ icon.size }} material-icons">{{ icon.type }}</i></a>',      
+
+      scope: {
+        icon: '=',
+        type: '=',
+        hover: '=',
+        dataKey: '=',
+        filename: '=',
+        request: '=',
+        metrics: '='
+      },
+
+      // onclick
+      link: function(scope, el, attr) {
+
+        // init tooltip
+        $('.tooltipped').tooltip({
+          tooltip: 'Download CSV'
+        });
+
+        // set defaults
+        scope.icon = {
+          type: scope.icon && scope.icon.type ? scope.icon.type : 'ic_assignment_returned',
+          color: scope.icon && scope.icon.color ? scope.icon.color : '',
+          size: scope.icon && scope.icon.size ? scope.icon.size : 'small'
+        }
+        scope.type = scope.type ? scope.type : 'csv';
+        scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type;
+        scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
+        scope.filename = scope.filename ? scope.filename : moment().format();        
+        
+        // bind download event
+        el.bind( 'click', function($e) {
+
+          // prepare download
+          download[scope.type](scope.filename, scope.request, scope.dataKey);
+
+          // record metrics
+          if (scope.metrics) {
+            download.setMetrics(scope.metrics);
+          }
+
+        });
+
+      }
+    }
+
+  })
   .directive('ngmDashboard', function ($rootScope, $log, dashboard, ngmTemplatePath) {
     'use strict';
 
