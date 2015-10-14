@@ -178,7 +178,6 @@ angular.module('ngm')
         $http(request)
           .success(function(data){
           }).error(function(){
-            deferred.reject();
           });
       }
 
