@@ -323,7 +323,7 @@ angular.module('ngm')
 
       replace: true,
 
-      template: '<a class="tooltipped waves-effect waves-teal" data-position="top" data-delay="50" data-tooltip="{{ hover }}" style="color: {{ icon.color }}"><i class="{{ icon.size }} material-icons">{{ icon.type }}</i></a>',      
+      template: '<a class="tooltipped" data-position="top" data-delay="50" data-tooltip="{{ hover }}" style="color: {{ icon.color }}"><i class="{{ icon.size }} material-icons">{{ icon.type }}</i></a>',      
 
       scope: {
         icon: '=',
