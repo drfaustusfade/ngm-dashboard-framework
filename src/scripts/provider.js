@@ -186,36 +186,7 @@ angular.module('ngm.provider', [])
 			loadingTemplate = template;
 			return this;
 		};
-
-	 /**
-		* @ngdoc method
-		* @name ngm.dashboardProvider#getData
-		* @methodOf ngm.dashboardProvider
-		* @description
-		*
-		* Fetches data using $http
-		*
-		* @param {object} $http request
-		*
-		* @returns {deferred.promise} self
-		*/
-		this.getData = function(request){
-			var initInjector = angular.injector(['ng']);
-			var $q = initInjector.get('$q');
-			var $http = initInjector.get('$http');
-
-			var deferred = $q.defer();
-			$http(request)
-				.success(function(data){
-					deferred.resolve(data);
-				})
-				.error(function(){
-					deferred.reject();
-				});
-
-			return deferred.promise;
-		};
-
+		
 	 /**
 		* @ngdoc service
 		* @name ngm.dashboard
@@ -252,38 +223,8 @@ angular.module('ngm.provider', [])
 				 */
 				id: function(){
 					return ++cid;
-				},
-
-				 /**
-					* @ngdoc method
-					* @name ngm.dashboard#getData
-					* @methodOf ngm.dashboard
-					* @description
-					*
-					* Fetches data using $http
-					*
-					* @param {object} $http request
-					*
-					* @returns {deferred.promise} self
-					*/
-					getData: function(request){
-						var initInjector = angular.injector(['ng']);
-						var $q = initInjector.get('$q');
-						var $http = initInjector.get('$http');
-
-						var deferred = $q.defer();
-						$http(request)
-							.success(function(data){
-								deferred.resolve(data);
-							})
-							.error(function(){
-								deferred.reject();
-							});
-
-						return deferred.promise;
-					}
+				}
 
 			};
 		};
-
-	});
+});
