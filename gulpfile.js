@@ -87,10 +87,10 @@ gulp.task('css', function(){
 gulp.task('js', function(){
   gulp.src([
         'src/scripts/ngm.js',
-        'src/scripts/column.js',
         'src/scripts/dashboard.js',
         'src/scripts/provider.js',
         'src/scripts/row.js',
+        'src/scripts/column.js',
         'src/scripts/widget-content.js',
         'src/scripts/widget.js',
         'src/templates/*.html'
