@@ -656,19 +656,33 @@ angular.module('ngm')
 					onClose: "&",
 					onSet: "&",
 					onStop: "&",
+					onSelection: "&",
 					ngReadonly: "=?",
 					max: "@",
 					min: "@"
 			},
-			link: function ($scope, element, attrs, ngModelCtrl) {
+			link: function ($scope, element, attrs, ngModel) {
 
-				ngModelCtrl.$formatters.unshift(function (modelValue) {
+				// watch changes
+				$scope.$watch(function () {
+					return ngModel.$modelValue;
+				}, function(newValue, oldValue) {
+					if(angular.equals(newValue, oldValue)){
+						return; // simply skip that
+					} else {
+						if(angular.isDefined($scope.onSelection)){
+							$scope.onSelection();
+						}
+					}
+				});
+
+				ngModel.$formatters.unshift(function (modelValue) {
 					if (modelValue) {
 						var date = new Date(modelValue);
 						return (angular.isDefined($scope.format)) ? date.format($scope.format) : date.format('d mmmm, yyyy');
 					}
 					return null;
-				});      
+				});
 
 				var pickadateInput = element.pickadate({
 					selectMonths: true, // Creates a dropdown to control month
@@ -679,7 +693,7 @@ angular.module('ngm')
 					onStart: function(){
 						setTimeout(function(){
 							// set time
-							var date = ngModelCtrl.$viewValue;
+							var date = ngModel.$modelValue;
 							picker.set('select', [new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate()])
 						}, 0)
 					},
@@ -691,28 +705,7 @@ angular.module('ngm')
 						if(event.select){
 							picker.close();
 						}
-
 					}
-
-						// container : (angular.isDefined(scope.container)) ? scope.container : 'body',
-						// format: (angular.isDefined(scope.format)) ? scope.format : undefined,
-						// formatSubmit: (angular.isDefined(scope.formatSubmit)) ? scope.formatSubmit : undefined,
-						// monthsFull: (angular.isDefined(monthsFull)) ? monthsFull : undefined,
-						// monthsShort: (angular.isDefined(monthsShort)) ? monthsShort : undefined,
-						// weekdaysFull: (angular.isDefined(weekdaysFull)) ? weekdaysFull : undefined,
-						// weekdaysLetter: (angular.isDefined(weekdaysLetter)) ? weekdaysLetter : undefined,
-						// firstDay: (angular.isDefined(scope.firstDay)) ? scope.firstDay : 0,                                
-						// disable: (angular.isDefined(scope.disable)) ? scope.disable : undefined,
-						// today: (angular.isDefined(scope.today)) ? scope.today : undefined,
-						// clear: (angular.isDefined(scope.clear)) ? scope.clear : undefined,
-						// close: (angular.isDefined(scope.close)) ? scope.close : undefined,
-						// selectYears: (angular.isDefined(scope.selectYears)) ? scope.selectYears : undefined,
-						// onStart: (angular.isDefined(scope.onStart)) ? function(){ scope.onStart(); } : undefined,
-						// onRender: (angular.isDefined(scope.onRender)) ? function(){ scope.onRender(); } : undefined,
-						// onOpen: (angular.isDefined(scope.onOpen)) ? function(){ scope.onOpen(); } : undefined,
-						// onClose: (angular.isDefined(scope.onClose)) ? function(){ scope.onClose(); } : undefined,
-						// onSet: (angular.isDefined(scope.onSet)) ? function(){ scope.onSet(); } : undefined,
-						// onStop: (angular.isDefined(scope.onStop)) ? function(){ scope.onStop(); } : undefined
 				});
 
 				//pickadate API
