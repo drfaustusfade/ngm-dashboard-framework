@@ -152,6 +152,7 @@ angular.module('ngm')
           currentScope = compileWidget($scope, $element, currentScope);
         });
         $scope.$on('widgetConfigChanged', function(event, params){
+          // match update to widget using 'broadcast'
           if ($scope.model.broadcast === params.broadcast){
             // Extend widget config with params
             currentScope.config = angular.merge({}, $scope.model.config, params.config);
