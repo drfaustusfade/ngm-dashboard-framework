@@ -1,6 +1,6 @@
 {
   "name": "ngm-dashboard-framework",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "devDependencies": {
     "connect-modrewrite": "^0.8.1",
     "del": "^1.1.1",

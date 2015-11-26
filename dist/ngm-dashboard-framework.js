@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.0.15');
+  .value('ngmVersion', '0.0.19');
 
 /*
  * The MIT License
@@ -1283,9 +1283,10 @@ angular.module('ngm')
           currentScope = compileWidget($scope, $element, currentScope);
         });
         $scope.$on('widgetConfigChanged', function(event, params){
+          // match update to widget using 'broadcast'
           if ($scope.model.broadcast === params.broadcast){
             // Extend widget config with params
-            currentScope.config = angular.merge({}, $scope.model.config, params.config);
+            $scope.model.config = angular.merge({}, $scope.model.config, params.config);
             // Re-compile widget
             currentScope = compileWidget($scope, $element, currentScope);
           }
