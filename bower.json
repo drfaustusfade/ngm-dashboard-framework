@@ -1,6 +1,6 @@
 {
   "name": "ngm-dashboard-framework",
-  "version": "0.0.17",
+  "version": "0.0.19",
   "main": [
     "dist/ngm-dashboard-framework.js",
     "dist/ngm-dashboard-framework.css"
