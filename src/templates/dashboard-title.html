@@ -8,16 +8,51 @@
 		  	{{ model.header.title.title }}
 		</h2>
 
-		<!-- download div container -->
-		<div class="{{ model.header.download.class }}" 
-			style="{{ model.header.download.style }}"
-			ng-repeat="download in model.header.download.downloads">
+		<div class="{{ model.header.pdf.class }}"
+			style="{{ model.header.pdf.style }}"
+			ng-repeat="download in model.header.pdf.downloads">
 
-			<!-- ngm dashboard directive -->
 			<ngm-dashboard-download
 				icon="download.icon"
 				type="download.type"
 				hover="download.hover"
+				title="download.title"
+				filename="download.filename"
+				dataKey="download.dataKey"
+				request="download.request" 
+				metrics="download.metrics">
+			</ngm-dashboard-download>
+		</div>
+
+		<div class="{{ model.header.csv.class }}"
+			style="{{ model.header.csv.style }}"
+			ng-repeat="download in model.header.csv.downloads">
+
+			<ngm-dashboard-download
+				icon="download.icon"
+				type="download.type"
+				hover="download.hover"
+				style="download.style"
+				title="download.title"
+				filename="download.filename"
+				dataKey="download.dataKey"
+				request="download.request" 
+				metrics="download.metrics">
+			</ngm-dashboard-download>
+		</div>					
+
+		<!-- download div container
+		<div class="{{ model.header.download.class }}" 
+			style="{{ model.header.download.style }}"
+			ng-repeat="download in model.header.download.downloads">
+
+			ngm dashboard directive
+			<ngm-dashboard-download
+				icon="download.icon"
+				type="download.type"
+				hover="download.hover"
+				style="download.style"
+				title="download.title"
 				filename="download.filename"
 				dataKey="download.dataKey"
 				request="download.request" 
@@ -25,6 +60,8 @@
 			</ngm-dashboard-download>
 
 		</div>
+
+		-->
 
 	</div>
 

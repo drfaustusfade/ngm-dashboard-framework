@@ -386,7 +386,8 @@ angular.module('ngm')
 
 			// client side PDF generation
 			'pdf': function(filename, request, dataKey){
-				console.log('PDF');
+				// open in new tab
+				window.open('http://reporthub.immap.org/downloads/who-afghanistan-measles-extracted-2015-11-30T15-17-37+04-30.pdf', '_blank');
 			},
 
 			// writes metrics to rest api
@@ -405,14 +406,14 @@ angular.module('ngm')
 
 			replace: true,
 
-			// template: '<a class="tooltipped" data-position="top" data-delay="50" data-tooltip="{{ hover }}" style="color: {{ icon.color }}"><i class="{{ icon.size }} material-icons">{{ icon.type }}</i></a>',
-
-			template: '<a class="tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}"><button style="width: 100%;" class="btn btn-large waves-effect waves-teal" type="submit">Download CSV</button>',
+			// template: '<a class="tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}"><button style="{{ style }}" class="btn btn-large waves-effect waves-teal" type="submit"><i class="material-icons left">{{ icon }}</i>{{ title }}</button></a>',
+			template: '<a class="btn btn-large waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}" style="width:100%"><i class="material-icons left">{{ icon }}</i>{{ title }}</a></a>',
 
 			scope: {
 				icon: '=',
 				type: '=',
 				hover: '=',
+				title: '=',
 				dataKey: '=',
 				filename: '=',
 				request: '=',
@@ -428,13 +429,10 @@ angular.module('ngm')
 				});
 
 				// set defaults
-				scope.icon = {
-					type: scope.icon && scope.icon.type ? scope.icon.type : 'ic_assignment_returned',
-					color: scope.icon && scope.icon.color ? scope.icon.color : '',
-					size: scope.icon && scope.icon.size ? scope.icon.size : 'small'
-				}
+				scope.icon = scope.icon ? scope.icon.color : '';
 				scope.type = scope.type ? scope.type : 'csv';
 				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type;
+				scope.title = scope.title ? scope.title : 'DOWNLOAD';
 				scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
 				scope.filename = scope.filename ? scope.filename : moment().format();        
 				

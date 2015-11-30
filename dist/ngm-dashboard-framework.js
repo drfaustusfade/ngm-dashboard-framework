@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.0.19');
+  .value('ngmVersion', '0.0.20');
 
 /*
  * The MIT License
@@ -419,7 +419,8 @@ angular.module('ngm')
 
 			// client side PDF generation
 			'pdf': function(filename, request, dataKey){
-				console.log('PDF');
+				// open in new tab
+				window.open('http://reporthub.immap.org/downloads/who-afghanistan-measles-extracted-2015-11-30T15-17-37+04-30.pdf', '_blank');
 			},
 
 			// writes metrics to rest api
@@ -438,14 +439,14 @@ angular.module('ngm')
 
 			replace: true,
 
-			// template: '<a class="tooltipped" data-position="top" data-delay="50" data-tooltip="{{ hover }}" style="color: {{ icon.color }}"><i class="{{ icon.size }} material-icons">{{ icon.type }}</i></a>',
-
-			template: '<a class="tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}"><button style="width: 100%;" class="btn btn-large waves-effect waves-teal" type="submit">Download CSV</button>',
+			// template: '<a class="tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}"><button style="{{ style }}" class="btn btn-large waves-effect waves-teal" type="submit"><i class="material-icons left">{{ icon }}</i>{{ title }}</button></a>',
+			template: '<a class="btn btn-large waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}" style="width:100%"><i class="material-icons left">{{ icon }}</i>{{ title }}</a></a>',
 
 			scope: {
 				icon: '=',
 				type: '=',
 				hover: '=',
+				title: '=',
 				dataKey: '=',
 				filename: '=',
 				request: '=',
@@ -461,13 +462,10 @@ angular.module('ngm')
 				});
 
 				// set defaults
-				scope.icon = {
-					type: scope.icon && scope.icon.type ? scope.icon.type : 'ic_assignment_returned',
-					color: scope.icon && scope.icon.color ? scope.icon.color : '',
-					size: scope.icon && scope.icon.size ? scope.icon.size : 'small'
-				}
+				scope.icon = scope.icon ? scope.icon.color : '';
 				scope.type = scope.type ? scope.type : 'csv';
 				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type;
+				scope.title = scope.title ? scope.title : 'DOWNLOAD';
 				scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
 				scope.filename = scope.filename ? scope.filename : moment().format();        
 				
@@ -1412,6 +1410,6 @@ angular.module('ngm')
 
 angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=col ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\"> <div class=row>  <h2 class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\"> {{ model.header.title.title }} </h2>  <div class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" ng-repeat=\"download in model.header.download.downloads\">  <ngm-dashboard-download icon=download.icon type=download.type hover=download.hover filename=download.filename datakey=download.dataKey request=download.request metrics=download.metrics> </ngm-dashboard-download> </div> </div> <div class=row>  <p class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\"> {{ model.header.subtitle.title }} </p>  <div class=\"{{ model.header.datePicker.class }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmStartDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=ngmStartDate type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
+$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\"> <div class=row>  <h2 class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\"> {{ model.header.title.title }} </h2> <div class=\"{{ model.header.pdf.class }}\" style=\"{{ model.header.pdf.style }}\" ng-repeat=\"download in model.header.pdf.downloads\"> <ngm-dashboard-download icon=download.icon type=download.type hover=download.hover title=download.title filename=download.filename datakey=download.dataKey request=download.request metrics=download.metrics> </ngm-dashboard-download> </div> <div class=\"{{ model.header.csv.class }}\" style=\"{{ model.header.csv.style }}\" ng-repeat=\"download in model.header.csv.downloads\"> <ngm-dashboard-download icon=download.icon type=download.type hover=download.hover style=download.style title=download.title filename=download.filename datakey=download.dataKey request=download.request metrics=download.metrics> </ngm-dashboard-download> </div>  </div> <div class=row>  <p class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\"> {{ model.header.subtitle.title }} </p>  <div class=\"{{ model.header.datePicker.class }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmStartDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=ngmStartDate type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
 $templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row> </div> </div> ");
 $templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\" style=\"{{ definition.style }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);
