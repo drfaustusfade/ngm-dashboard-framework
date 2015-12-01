@@ -8,60 +8,31 @@
 		  	{{ model.header.title.title }}
 		</h2>
 
-		<div class="{{ model.header.pdf.class }}"
-			style="{{ model.header.pdf.style }}"
-			ng-repeat="download in model.header.pdf.downloads">
+		 <div class="{{ model.header.download.class }}" align="right">
+		 	<div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; margin-top:66px;">
+			    <a class="btn-floating btn-large teal">
+			      <i class="large material-icons">cloud_download</i>
+			    </a>
+			    <ul>
 
-			<ngm-dashboard-download
-				icon="download.icon"
-				type="download.type"
-				hover="download.hover"
-				title="download.title"
-				filename="download.filename"
-				dataKey="download.dataKey"
-				request="download.request" 
-				metrics="download.metrics">
-			</ngm-dashboard-download>
+			    	<!-- ng-repeat here adding each config obj which returns a </li> element -->
+			    	<div >
+				    	<!-- download options -->
+				    	<ngm-dashboard-download 
+				    		ng-repeat="data in model.header.download.downloads track by $index"
+							type="data.type"
+							color="data.color"
+							icon="data.icon"
+							hover="data.hover"
+							filename="data.filename"
+							request="data.request"
+							metrics="data.metrics">
+				    	</ngm-dashboard-download>
+				    </div>
+
+			    </ul>
+		  </div>
 		</div>
-
-		<div class="{{ model.header.csv.class }}"
-			style="{{ model.header.csv.style }}"
-			ng-repeat="download in model.header.csv.downloads">
-
-			<ngm-dashboard-download
-				icon="download.icon"
-				type="download.type"
-				hover="download.hover"
-				style="download.style"
-				title="download.title"
-				filename="download.filename"
-				dataKey="download.dataKey"
-				request="download.request" 
-				metrics="download.metrics">
-			</ngm-dashboard-download>
-		</div>					
-
-		<!-- download div container
-		<div class="{{ model.header.download.class }}" 
-			style="{{ model.header.download.style }}"
-			ng-repeat="download in model.header.download.downloads">
-
-			ngm dashboard directive
-			<ngm-dashboard-download
-				icon="download.icon"
-				type="download.type"
-				hover="download.hover"
-				style="download.style"
-				title="download.title"
-				filename="download.filename"
-				dataKey="download.dataKey"
-				request="download.request" 
-				metrics="download.metrics">
-			</ngm-dashboard-download>
-
-		</div>
-
-		-->
 
 	</div>
 

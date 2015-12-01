@@ -44,7 +44,7 @@
  */
 
 angular.module('ngm')
-	.service('ngmData', function($q, $http){
+	.service('ngmData', ['$q', '$http', function($q, $http){
 		return {
 			get: function(request){
 				var deferred = $q.defer();
@@ -59,8 +59,8 @@ angular.module('ngm')
 				return deferred.promise;
 			}
 		};
-	})
-	.directive('ngmDashboard', function ($rootScope, $log, dashboard, ngmTemplatePath) {
+	}])
+	.directive('ngmDashboard', ['$rootScope', '$log', 'dashboard', 'ngmTemplatePath', function ($rootScope, $log, dashboard, ngmTemplatePath) {
 		'use strict';
 
 		function stringToBoolean(string){
@@ -266,7 +266,7 @@ angular.module('ngm')
 			},
 			templateUrl: ngmTemplatePath + 'dashboard.html'
 		};
-	})
+	}])
 	// toggles accordian classes for 
 	.directive('ngmMenu', function() {
 
@@ -325,7 +325,7 @@ angular.module('ngm')
 			}
 		};
 	})
-	.directive('ngmDashboardDownload',  function(dashboard, ngmData) {
+	.directive('ngmDashboardDownload', ['dashboard', 'ngmData',  function(dashboard, ngmData) {
 
 		// client side download    
 		var download = {
@@ -387,7 +387,7 @@ angular.module('ngm')
 			// client side PDF generation
 			'pdf': function(filename, request, dataKey){
 				// open in new tab
-				window.open('http://reporthub.immap.org/downloads/who-afghanistan-measles-extracted-2015-11-30T15-17-37+04-30.pdf', '_blank');
+				window.open(filename, '_blank');
 			},
 
 			// writes metrics to rest api
@@ -406,14 +406,13 @@ angular.module('ngm')
 
 			replace: true,
 
-			// template: '<a class="tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}"><button style="{{ style }}" class="btn btn-large waves-effect waves-teal" type="submit"><i class="material-icons left">{{ icon }}</i>{{ title }}</button></a>',
-			template: '<a class="btn btn-large waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}" style="width:100%"><i class="material-icons left">{{ icon }}</i>{{ title }}</a></a>',
+			template: '<li><a class="btn-floating {{ color }} tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
-				icon: '=',
 				type: '=',
+				icon: '=',
+				color: '=',
 				hover: '=',
-				title: '=',
 				dataKey: '=',
 				filename: '=',
 				request: '=',
@@ -429,10 +428,10 @@ angular.module('ngm')
 				});
 
 				// set defaults
-				scope.icon = scope.icon ? scope.icon.color : '';
 				scope.type = scope.type ? scope.type : 'csv';
-				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type;
-				scope.title = scope.title ? scope.title : 'DOWNLOAD';
+				scope.icon = scope.icon ? scope.icon : 'cloud_download';
+				scope.color = scope.color ? scope.color : 'blue';
+				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type.toUpperCase();
 				scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
 				scope.filename = scope.filename ? scope.filename : moment().format();        
 				
@@ -451,24 +450,25 @@ angular.module('ngm')
 
 			}
 		}
-	})
+	}])
 	.directive("ngModel", ["$timeout", function($timeout){
-			return {
-					restrict: 'A',
-					priority: -1, // lower priority than built-in ng-model so it runs first
-					link: function(scope, element, attr) {
-							scope.$watch(attr.ngModel,function(value){
-									$timeout(function () {
-											if (value){
-													element.trigger("change");
-											} else if(element.attr('placeholder') === undefined) {
-													if(!element.is(":focus"))
-															element.trigger("blur");
-											}
-									});
-							});
-					}
-			};
+		return {
+			restrict: 'A',
+			priority: -1, // lower priority than built-in ng-model so it runs first
+			link: function(scope, element, attr) {
+				scope.$watch(attr.ngModel,function(value){
+					$timeout(function () {
+						if (value){
+								element.trigger("change");
+						} else if(element.attr('placeholder') === undefined) {
+							if(!element.is(":focus")) {
+								element.trigger("blur");
+							}
+						}
+					});
+				});
+			}
+		};
 	}])
 	/**
 	 * Add pickadate directive

@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.0.20');
+  .value('ngmVersion', '0.0.22');
 
 /*
  * The MIT License
@@ -77,7 +77,7 @@ angular.module('ngm', ['ngm.provider'])
  */
 
 angular.module('ngm')
-	.service('ngmData', function($q, $http){
+	.service('ngmData', ['$q', '$http', function($q, $http){
 		return {
 			get: function(request){
 				var deferred = $q.defer();
@@ -92,8 +92,8 @@ angular.module('ngm')
 				return deferred.promise;
 			}
 		};
-	})
-	.directive('ngmDashboard', function ($rootScope, $log, dashboard, ngmTemplatePath) {
+	}])
+	.directive('ngmDashboard', ['$rootScope', '$log', 'dashboard', 'ngmTemplatePath', function ($rootScope, $log, dashboard, ngmTemplatePath) {
 		
 
 		function stringToBoolean(string){
@@ -299,7 +299,7 @@ angular.module('ngm')
 			},
 			templateUrl: ngmTemplatePath + 'dashboard.html'
 		};
-	})
+	}])
 	// toggles accordian classes for 
 	.directive('ngmMenu', function() {
 
@@ -358,7 +358,7 @@ angular.module('ngm')
 			}
 		};
 	})
-	.directive('ngmDashboardDownload',  function(dashboard, ngmData) {
+	.directive('ngmDashboardDownload', ['dashboard', 'ngmData',  function(dashboard, ngmData) {
 
 		// client side download    
 		var download = {
@@ -420,7 +420,7 @@ angular.module('ngm')
 			// client side PDF generation
 			'pdf': function(filename, request, dataKey){
 				// open in new tab
-				window.open('http://reporthub.immap.org/downloads/who-afghanistan-measles-extracted-2015-11-30T15-17-37+04-30.pdf', '_blank');
+				window.open(filename, '_blank');
 			},
 
 			// writes metrics to rest api
@@ -439,14 +439,13 @@ angular.module('ngm')
 
 			replace: true,
 
-			// template: '<a class="tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}"><button style="{{ style }}" class="btn btn-large waves-effect waves-teal" type="submit"><i class="material-icons left">{{ icon }}</i>{{ title }}</button></a>',
-			template: '<a class="btn btn-large waves-effect waves-light tooltipped" data-position="left" data-delay="50" data-tooltip="{{ hover }}" style="width:100%"><i class="material-icons left">{{ icon }}</i>{{ title }}</a></a>',
+			template: '<li><a class="btn-floating {{ color }} tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
-				icon: '=',
 				type: '=',
+				icon: '=',
+				color: '=',
 				hover: '=',
-				title: '=',
 				dataKey: '=',
 				filename: '=',
 				request: '=',
@@ -462,10 +461,10 @@ angular.module('ngm')
 				});
 
 				// set defaults
-				scope.icon = scope.icon ? scope.icon.color : '';
 				scope.type = scope.type ? scope.type : 'csv';
-				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type;
-				scope.title = scope.title ? scope.title : 'DOWNLOAD';
+				scope.icon = scope.icon ? scope.icon : 'cloud_download';
+				scope.color = scope.color ? scope.color : 'blue';
+				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type.toUpperCase();
 				scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
 				scope.filename = scope.filename ? scope.filename : moment().format();        
 				
@@ -484,24 +483,25 @@ angular.module('ngm')
 
 			}
 		}
-	})
+	}])
 	.directive("ngModel", ["$timeout", function($timeout){
-			return {
-					restrict: 'A',
-					priority: -1, // lower priority than built-in ng-model so it runs first
-					link: function(scope, element, attr) {
-							scope.$watch(attr.ngModel,function(value){
-									$timeout(function () {
-											if (value){
-													element.trigger("change");
-											} else if(element.attr('placeholder') === undefined) {
-													if(!element.is(":focus"))
-															element.trigger("blur");
-											}
-									});
-							});
-					}
-			};
+		return {
+			restrict: 'A',
+			priority: -1, // lower priority than built-in ng-model so it runs first
+			link: function(scope, element, attr) {
+				scope.$watch(attr.ngModel,function(value){
+					$timeout(function () {
+						if (value){
+								element.trigger("change");
+						} else if(element.attr('placeholder') === undefined) {
+							if(!element.is(":focus")) {
+								element.trigger("blur");
+							}
+						}
+					});
+				});
+			}
+		};
 	}])
 	/**
 	 * Add pickadate directive
@@ -1410,6 +1410,6 @@ angular.module('ngm')
 
 angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=col ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\"> <div class=row>  <h2 class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\"> {{ model.header.title.title }} </h2> <div class=\"{{ model.header.pdf.class }}\" style=\"{{ model.header.pdf.style }}\" ng-repeat=\"download in model.header.pdf.downloads\"> <ngm-dashboard-download icon=download.icon type=download.type hover=download.hover title=download.title filename=download.filename datakey=download.dataKey request=download.request metrics=download.metrics> </ngm-dashboard-download> </div> <div class=\"{{ model.header.csv.class }}\" style=\"{{ model.header.csv.style }}\" ng-repeat=\"download in model.header.csv.downloads\"> <ngm-dashboard-download icon=download.icon type=download.type hover=download.hover style=download.style title=download.title filename=download.filename datakey=download.dataKey request=download.request metrics=download.metrics> </ngm-dashboard-download> </div>  </div> <div class=row>  <p class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\"> {{ model.header.subtitle.title }} </p>  <div class=\"{{ model.header.datePicker.class }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmStartDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=ngmStartDate type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
+$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\"> <div class=row>  <h2 class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\"> {{ model.header.title.title }} </h2> <div class=\"{{ model.header.download.class }}\" align=right> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large teal\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=data.hover filename=data.filename request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div> <div class=row>  <p class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\"> {{ model.header.subtitle.title }} </p>  <div class=\"{{ model.header.datePicker.class }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmStartDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=ngmStartDate type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
 $templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row> </div> </div> ");
 $templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\" style=\"{{ definition.style }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);
