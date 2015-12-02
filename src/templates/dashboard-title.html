@@ -8,7 +8,7 @@
 		  	{{ model.header.title.title }}
 		</h2>
 
-		 <div class="{{ model.header.download.class }}" align="right">
+		 <div class="{{ model.header.download.class }}" align="right" ng-if="model.header.download">
 		 	<div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; margin-top:66px;">
 			    <a class="btn-floating btn-large teal">
 			      <i class="large material-icons">cloud_download</i>
