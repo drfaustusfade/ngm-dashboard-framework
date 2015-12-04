@@ -1,14 +1,17 @@
 
 
 <div class="{{ model.header.div.class }}" style="{{ model.header.div.style }}">
-	<div class="row">
 		
+	<!-- row -->
+	<div class="row">
+
 		<!-- title -->
 		<h2 class="{{ model.header.title.class }}" style="{{ model.header.title.style }}">
 		  	{{ model.header.title.title }}
 		</h2>
 
-		 <div class="{{ model.header.download.class }}" align="right" ng-if="model.header.download">
+		<!-- download -->
+		<div class="{{ model.header.download.class }}" style="{{ model.header.download.style }}" align="right" ng-if="model.header.download">
 		 	<div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; margin-top:66px;">
 			    <a class="btn-floating btn-large teal">
 			      <i class="large material-icons">cloud_download</i>
@@ -16,7 +19,7 @@
 			    <ul>
 
 			    	<!-- ng-repeat here adding each config obj which returns a </li> element -->
-			    	<div >
+			    	<div>
 				    	<!-- download options -->
 				    	<ngm-dashboard-download 
 				    		ng-repeat="data in model.header.download.downloads track by $index"
@@ -31,11 +34,12 @@
 				    </div>
 
 			    </ul>
-		  </div>
+		  	</div>
 		</div>
 
 	</div>
 
+	<!-- row -->
 	<div class="row">
 		
 		<!-- subtitle -->
@@ -44,7 +48,7 @@
 		</p>
 
 		<!-- ngm date -->
-		<div class="{{ model.header.datePicker.class }}">
+		<div class="{{ model.header.datePicker.class }}" style="{{ model.header.datePicker.style }}">
 			<div ng-repeat="date in model.header.datePicker.dates track by $index">
 			
 				<!-- date picker -->
