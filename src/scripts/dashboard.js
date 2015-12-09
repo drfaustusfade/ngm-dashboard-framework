@@ -60,7 +60,7 @@ angular.module('ngm')
 			}
 		};
 	}])
-	.directive('ngmDashboard', ['$rootScope', '$log', 'dashboard', 'ngmTemplatePath', function ($rootScope, $log, dashboard, ngmTemplatePath) {
+	.directive('ngmDashboard', ['$rootScope', '$log', '$sce', 'dashboard', 'ngmTemplatePath', function ($rootScope, $log, $sce, dashboard, ngmTemplatePath) {
 		'use strict';
 
 		function stringToBoolean(string){
@@ -236,6 +236,11 @@ angular.module('ngm')
 							if (!model.title){
 								model.title = 'Dashboard';
 							}
+
+							// title and subtitle in html
+							model.header.title.title = $sce.trustAsHtml(model.header.title.title);
+							model.header.title.subtitle = $sce.trustAsHtml(model.header.subtitle.subtitle);
+
 							if (!model.titleTemplateUrl) {
 								model.titleTemplateUrl = ngmTemplatePath + 'dashboard-title.html';
 							}
