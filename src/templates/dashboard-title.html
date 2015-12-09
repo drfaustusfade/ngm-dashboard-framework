@@ -6,8 +6,8 @@
 	<div class="row">
 
 		<!-- title -->
-		<h2 class="{{ model.header.title.class }}" style="{{ model.header.title.style }}">
-		  	{{ model.header.title.title }}
+		<h2 class="{{ model.header.title.class }}" style="{{ model.header.title.style }}" 
+			ng-bind-html="model.header.title.title">
 		</h2>
 
 		<!-- download -->
@@ -43,8 +43,8 @@
 	<div class="row">
 		
 		<!-- subtitle -->
-		<p class="{{ model.header.subtitle.class }}" style="{{ model.header.subtitle.style }}">
-			{{ model.header.subtitle.title }}
+		<p class="{{ model.header.subtitle.class }}" style="{{ model.header.subtitle.style }}"
+			ng-bind-html="model.header.subtitle.title">
 		</p>
 
 		<!-- ngm date -->
