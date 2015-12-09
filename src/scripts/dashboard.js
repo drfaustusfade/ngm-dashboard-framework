@@ -236,11 +236,6 @@ angular.module('ngm')
 							if (!model.title){
 								model.title = 'Dashboard';
 							}
-
-							// title and subtitle in html
-							model.header.title.title = $sce.trustAsHtml(model.header.title.title);
-							model.header.title.subtitle = $sce.trustAsHtml(model.header.subtitle.subtitle);
-
 							if (!model.titleTemplateUrl) {
 								model.titleTemplateUrl = ngmTemplatePath + 'dashboard-title.html';
 							}
