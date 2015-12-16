@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.1.0');
+  .value('ngmVersion', '0.1.4');
 
 /*
  * The MIT License
@@ -365,56 +365,24 @@ angular.module('ngm')
 	
 			// prepare and stream CSV to client      
 			'csv': function(filename, request, dataKey){
-
 				// get data
 				ngmData.get(request)
-					.then(function(data){
-
-						// datatype
+					// .then(function(data){
+					.then(function(csv){
 						var csvHeader;
 						var type = 'data:text/csv;charset=utf-8';
 
-						// convert json to array
-						var rows = data[dataKey].map(function (row) {
-
-							// csv headers
-							csvHeader = [];
-							var record = [];
-
-							// access each value
-							angular.forEach(row, function(d, key){
-
-								// create flat array
-								csvHeader.push(key);
-								record.push(d);
-
-							});
-
-							// join as csv string
-							var csvRow = record.join()
-
-							// return
-							return csvRow
-
-						});
-
-						// compile csv data
-						var csvData = [];
-								csvData.push(csvHeader.join());
-								csvData.push(rows.join('\n'));
-
-						// create element and add csv string
 						var el = document.createElement('a');
-								el.href = 'data:attachment/csv,' + encodeURIComponent(csvData);
-								el.target = '_blank';
-								el.download = filename + '.csv';
+							el.href = 'data:attachment/csv,' + encodeURIComponent(csv.data);
+							el.target = '_blank';
+							el.download = filename + '.csv';
 
 						// append, download & remove
 						document.body.appendChild(el);
 						el.click();
 						el.remove();
 
-					});
+					});			
 			},
 
 			// client side PDF generation
