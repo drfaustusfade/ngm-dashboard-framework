@@ -6,12 +6,12 @@
 	<div class="row">
 
 		<!-- title -->
-		<h2 class="{{ model.header.title.class }}" style="{{ model.header.title.style }}" 
+		<h2 id="ngm-report-title" class="{{ model.header.title.class }}" style="{{ model.header.title.style }}" 
 			ng-bind-html="model.header.title.title">
 		</h2>
 
 		<!-- download -->
-		<div class="{{ model.header.download.class }}" style="{{ model.header.download.style }}" align="right" ng-if="model.header.download">
+		<div id="ngm-report-download" class="{{ model.header.download.class }}" style="{{ model.header.download.style }}" align="right" ng-if="model.header.download">
 		 	<div class="fixed-action-btn horizontal" style="position: relative; display: inline-block; margin-top:66px;">
 			    <a class="btn-floating btn-large teal">
 			      <i class="large material-icons">cloud_download</i>
@@ -43,12 +43,12 @@
 	<div class="row">
 		
 		<!-- subtitle -->
-		<p class="{{ model.header.subtitle.class }}" style="{{ model.header.subtitle.style }}"
+		<p id="ngm-report-subtitle" class="{{ model.header.subtitle.class }}" style="{{ model.header.subtitle.style }}"
 			ng-bind-html="model.header.subtitle.title">
 		</p>
 
 		<!-- ngm date -->
-		<div class="{{ model.header.datePicker.class }}" style="{{ model.header.datePicker.style }}">
+		<div id="ngm-report-datepicker" class="{{ model.header.datePicker.class }}" style="{{ model.header.datePicker.style }}">
 			<div ng-repeat="date in model.header.datePicker.dates track by $index">
 			
 				<!-- date picker -->
