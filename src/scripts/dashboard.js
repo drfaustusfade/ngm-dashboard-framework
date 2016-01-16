@@ -342,7 +342,7 @@ angular.module('ngm')
 						var el = document.createElement('a');
 							el.href = 'data:attachment/csv,' + encodeURIComponent(csv.data);
 							el.target = '_blank';
-							el.download = request.data.report + 'extracted-' + moment().format() + '.csv';
+							el.download = request.data.report + '.csv';
 
 						// append, download & remove
 						document.body.appendChild(el);

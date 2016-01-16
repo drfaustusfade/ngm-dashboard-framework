@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.1.4');
+  .value('ngmVersion', '0.1.5');
 
 /*
  * The MIT License
@@ -375,7 +375,7 @@ angular.module('ngm')
 						var el = document.createElement('a');
 							el.href = 'data:attachment/csv,' + encodeURIComponent(csv.data);
 							el.target = '_blank';
-							el.download = request.data.report + 'extracted-' + moment().format() + '.csv';
+							el.download = request.data.report + '.csv';
 
 						// append, download & remove
 						document.body.appendChild(el);
