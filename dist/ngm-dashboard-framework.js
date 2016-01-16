@@ -364,7 +364,7 @@ angular.module('ngm')
 		var download = {
 	
 			// prepare and stream CSV to client      
-			'csv': function(filename, request, dataKey){
+			'csv': function(request){
 				// get data
 				ngmData.get(request)
 					// .then(function(data){
@@ -375,7 +375,7 @@ angular.module('ngm')
 						var el = document.createElement('a');
 							el.href = 'data:attachment/csv,' + encodeURIComponent(csv.data);
 							el.target = '_blank';
-							el.download = filename + '.csv';
+							el.download = request.data.report + 'extracted-' + moment().format() + '.csv';
 
 						// append, download & remove
 						document.body.appendChild(el);
@@ -386,9 +386,14 @@ angular.module('ngm')
 			},
 
 			// client side PDF generation
-			'pdf': function(filename, request, dataKey){
-				// open in new tab
-				window.open(filename, '_blank');
+			'pdf': function(request){
+				// get data
+				ngmData.get(request)
+					// .then(function(data){
+					.then(function(response){
+						// open in new tab
+						window.open(request.data.downloadUrl + response.report, '_blank');
+					});
 			},
 
 			// writes metrics to rest api
@@ -414,8 +419,6 @@ angular.module('ngm')
 				icon: '=',
 				color: '=',
 				hover: '=',
-				dataKey: '=',
-				filename: '=',
 				request: '=',
 				metrics: '='
 			},
@@ -433,14 +436,12 @@ angular.module('ngm')
 				scope.icon = scope.icon ? scope.icon : 'cloud_download';
 				scope.color = scope.color ? scope.color : 'blue';
 				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type.toUpperCase();
-				scope.dataKey = scope.dataKey ? scope.dataKey : 'data';
-				scope.filename = scope.filename ? scope.filename : moment().format();        
 				
 				// bind download event
 				el.bind( 'click', function($e) {
 
 					// prepare download
-					download[scope.type](scope.filename, scope.request, scope.dataKey);
+					download[scope.type](scope.request);
 
 					// record metrics
 					if (scope.metrics) {
