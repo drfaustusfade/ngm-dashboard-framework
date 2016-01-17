@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.1.7');
+  .value('ngmVersion', '0.1.8');
 
 /*
  * The MIT License
@@ -387,6 +387,11 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
 
+					},function(data){
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+						// error msg						
+						Materialize.toast('Data export error! Please try again or contact the administrator!', 4000);
 					});			
 			},
 
@@ -396,12 +401,15 @@ angular.module('ngm')
 				ngmData.get(request)
 					//
 					.then(function(response){
-
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
-
 						// open in new tab
 						window.open(request.data.downloadUrl + response.report, '_blank');
+					},function(data){
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+						// error msg						
+						Materialize.toast('Print export error! Please try again or contact the administrator!', 4000);
 					});
 			},
 

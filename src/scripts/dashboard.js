@@ -354,6 +354,11 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
 
+					},function(data){
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+						// error msg						
+						Materialize.toast('Data export error! Please try again or contact the administrator!', 4000);
 					});			
 			},
 
@@ -363,12 +368,15 @@ angular.module('ngm')
 				ngmData.get(request)
 					//
 					.then(function(response){
-
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
-
 						// open in new tab
 						window.open(request.data.downloadUrl + response.report, '_blank');
+					},function(data){
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+						// error msg						
+						Materialize.toast('Print export error! Please try again or contact the administrator!', 4000);
 					});
 			},
 
