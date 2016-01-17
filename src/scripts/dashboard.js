@@ -334,8 +334,10 @@ angular.module('ngm')
 			'csv': function(request){
 				// get data
 				ngmData.get(request)
-					// .then(function(data){
+					//
 					.then(function(csv){
+
+						// send CSV to client 
 						var csvHeader;
 						var type = 'data:text/csv;charset=utf-8';
 
@@ -349,6 +351,9 @@ angular.module('ngm')
 						el.click();
 						el.remove();
 
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+
 					});			
 			},
 
@@ -356,8 +361,12 @@ angular.module('ngm')
 			'pdf': function(request){
 				// get data
 				ngmData.get(request)
-					// .then(function(data){
+					//
 					.then(function(response){
+
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+
 						// open in new tab
 						window.open(request.data.downloadUrl + response.report, '_blank');
 					});
@@ -406,6 +415,9 @@ angular.module('ngm')
 				
 				// bind download event
 				el.bind( 'click', function($e) {
+
+					// open loading mask
+					$('#ngm-loading-modal').openModal({dismissible: false});
 
 					// prepare download
 					download[scope.type](scope.request);
