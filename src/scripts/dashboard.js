@@ -358,7 +358,7 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
 						// error msg						
-						Materialize.toast('Data export error! Please try again or contact the administrator!', 4000);
+						Materialize.toast(data.error, 4000);
 					});			
 			},
 
@@ -376,7 +376,7 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
 						// error msg						
-						Materialize.toast('Print export error! Please try again or contact the administrator!', 4000);
+						Materialize.toast(data.error, 4000);
 					});
 			},
 
