@@ -429,7 +429,7 @@ angular.module('ngm')
 
 			replace: true,
 
-			template: '<li><a class="btn-floating {{ color }} tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
+			template: '<li><a class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
 				type: '=',
@@ -520,139 +520,7 @@ angular.module('ngm')
 	 */
 	 // source
 	 // https://github.com/krescruz/angular-materialize/
-	.directive('ngmDate', ['$compile', '$timeout', function ($compile, $timeout) {
-
-		// Define Prototype Date format
-		// Use like this
-		// today = new Date();
-		// var dateString = today.format("dd-m-yy");
-		// var dateFormat = function () {
-
-		// 		var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,
-		// 				timezone = /\b(?:[PMCEA][SDP]T|(?:Pacific|Mountain|Central|Eastern|Atlantic) (?:Standard|Daylight|Prevailing) Time|(?:GMT|UTC)(?:[-+]\d{4})?)\b/g,
-		// 				timezoneClip = /[^-+\dA-Z]/g,
-		// 				pad = function (val, len) {
-		// 						val = String(val);
-		// 						len = len || 2;
-		// 						while (val.length < len) {
-		// 								val = "0" + val;
-		// 						}
-		// 						return val;
-		// 				};
-
-		// 		// Regexes and supporting functions are cached through closure
-		// 		return function (date, mask, utc) {
-
-		// 				var dF = dateFormat;
-
-		// 				// You can't provide utc if you skip other args (use the "UTC:" mask prefix)
-		// 				if (arguments.length === 1 && Object.prototype.toString.call(date) == "[object String]" && !/\d/.test(date)) {
-		// 						mask = date;
-		// 						date = undefined;
-		// 				}
-
-		// 				// Passing date through Date applies Date.parse, if necessary
-		// 				date = date ? new Date(date) : new Date();
-		// 				if (isNaN(date)) throw SyntaxError("invalid date");
-
-		// 				mask = String(dF.masks[mask] || mask || dF.masks["default"]);
-
-		// 				// Allow setting the utc argument via the mask
-		// 				if (mask.slice(0, 4) == "UTC:") {
-		// 						mask = mask.slice(4);
-		// 						utc = true;
-		// 				}
-
-		// 				var _ = utc ? "getUTC" : "get",
-		// 						d = date[ _ + "Date" ](),
-		// 						D = date[ _ + "Day" ](),
-		// 						m = date[ _ + "Month" ](),
-		// 						y = date[ _ + "FullYear" ](),
-		// 						H = date[ _ + "Hours" ](),
-		// 						M = date[ _ + "Minutes" ](),
-		// 						s = date[ _ + "Seconds" ](),
-		// 						L = date[ _ + "Milliseconds" ](),
-		// 						o = utc ? 0 : date.getTimezoneOffset(),
-		// 						flags = {
-		// 								d:    d,
-		// 								dd:   pad(d),
-		// 								ddd:  dF.i18n.dayNames[D],
-		// 								dddd: dF.i18n.dayNames[D + 7],
-		// 								m:    m + 1,
-		// 								mm:   pad(m + 1),
-		// 								mmm:  dF.i18n.monthNames[m],
-		// 								mmmm: dF.i18n.monthNames[m + 12],
-		// 								yy:   String(y).slice(2),
-		// 								yyyy: y,
-		// 								h:    H % 12 || 12,
-		// 								hh:   pad(H % 12 || 12),
-		// 								H:    H,
-		// 								HH:   pad(H),
-		// 								M:    M,
-		// 								MM:   pad(M),
-		// 								s:    s,
-		// 								ss:   pad(s),
-		// 								l:    pad(L, 3),
-		// 								L:    pad(L > 99 ? Math.round(L / 10) : L),
-		// 								t:    H < 12 ? "a"  : "p",
-		// 								tt:   H < 12 ? "am" : "pm",
-		// 								T:    H < 12 ? "A"  : "P",
-		// 								TT:   H < 12 ? "AM" : "PM",
-		// 								Z:    utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
-		// 								o:    (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
-		// 								S:    ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
-		// 						};
-
-		// 				return mask.replace(token, function ($0) {
-		// 						return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1);
-		// 				});
-		// 		};
-		// }();
-
-		// // Some common format strings
-		// dateFormat.masks = {
-		// 	 "default":      "ddd mmm dd yyyy HH:MM:ss",
-		// 		shortDate:      "m/d/yy",
-		// 		mediumDate:     "mmm d, yyyy",
-		// 		longDate:       "mmmm d, yyyy",
-		// 		fullDate:       "dddd, mmmm d, yyyy",
-		// 		shortTime:      "h:MM TT",
-		// 		mediumTime:     "h:MM:ss TT",
-		// 		longTime:       "h:MM:ss TT Z",
-		// 		isoDate:        "yyyy-mm-dd",
-		// 		isoTime:        "HH:MM:ss",
-		// 		isoDateTime:    "yyyy-mm-dd'T'HH:MM:ss",
-		// 		isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"r
-		// };
-
-		// // Internationalization strings
-		// dateFormat.i18n = {
-		// 		dayNames: [
-		// 				"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-		// 				"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-		// 		],
-		// 		monthNames: [
-		// 				"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-		// 				"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-		// 		]
-		// };
-
-		// // For convenience...
-		// Date.prototype.format = function (mask, utc) {
-		// 		return dateFormat(this, mask, utc);
-		// };
-
-		// /**
-		//  * Validate date object
-		//  * @param  {Date}  date
-		//  * @return {Boolean}
-		//  */
-		// var isValidDate = function(date) {
-		// 		if( Object.prototype.toString.call(date) === '[object Date]' ) {
-		// 				return !isNaN(date.getTime());
-		// 		} 
-		// 		return false;
-		// };    
+	.directive('ngmDate', ['$compile', '$timeout', function ($compile, $timeout) { 
 
 		return {
 			require: 'ngModel',
@@ -725,41 +593,6 @@ angular.module('ngm')
 				element.bind('click', function($e) {
 					$scope.picker.open();
 				});
-
-				// ngModel.$formatters.unshift(function (modelValue) {
-				// 	if (modelValue) {
-				// 		var date = new Date(modelValue);
-				// 		return (angular.isDefined($scope.format)) ? date.format($scope.format) : date.format('d mmmm, yyyy');
-				// 	}
-				// 	return null;
-				// });
-
-				// var pickadateInput = element.pickadate({
-				// 	selectMonths: true, // Creates a dropdown to control month
-				// 	selectYears: 15, // Creates a dropdown of 15 years to control year
-				// 	format: (angular.isDefined($scope.format)) ? $scope.format : undefined,
-				// 	min: (angular.isDefined($scope.min)) ? $scope.min : undefined,
-				// 	max: (angular.isDefined($scope.max)) ? $scope.max : undefined,
-				// 	onStart: function(){
-				// 		setTimeout(function(){
-				// 			// set time
-				// 			var date = ngModel.$modelValue;
-				// 			picker.set('select', [new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate()])
-				// 		}, 0)
-				// 	},
-				// 	onRender: function(){
-				// 		//
-				// 	},          
-				// 	onSet: function(event){
-				// 		// close on date select
-				// 		if(event.select){
-				// 			picker.close();
-				// 		}
-				// 	}
-				// });
-
-				// //pickadate API
-				// var picker = pickadateInput.pickadate('picker');
 
 			}
 		};
@@ -1429,6 +1262,6 @@ angular.module('ngm')
 
 angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=col ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\">  <div class=row>  <h2 id=ngm-report-title class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\" ng-bind-html=model.header.title.title> </h2>  <div id=ngm-report-download class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" align=right ng-if=model.header.download> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large teal\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=data.hover filename=data.filename request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div>  <div class=row>  <p id=ngm-report-subtitle class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\" ng-bind-html=model.header.subtitle.title> </p>  <div id=ngm-report-datepicker class=\"{{ model.header.datePicker.class }}\" style=\"{{ model.header.datePicker.style }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=\"ngmDate-{{ $index }}\" type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
+$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\">  <div class=row>  <h2 id=ngm-report-title class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\" ng-bind-html=model.header.title.title> </h2>  <div id=ngm-report-download class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" align=right ng-if=model.header.download> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large teal z-depth-2\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=data.hover filename=data.filename request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div>  <div class=row>  <p id=ngm-report-subtitle class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\" ng-bind-html=model.header.subtitle.title> </p>  <div id=ngm-report-datepicker class=\"{{ model.header.datePicker.class }}\" style=\"{{ model.header.datePicker.style }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=\"ngmDate-{{ $index }}\" type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
 $templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row> </div> </div> ");
 $templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\" style=\"{{ definition.style }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);
