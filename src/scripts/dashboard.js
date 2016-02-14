@@ -207,9 +207,11 @@ angular.module('ngm')
 				var name = $scope.name;
 
 				// Update widget configs with broadcast
-				$scope.ngmModel.updateWidgets = function(params){
-					$scope.$broadcast( 'widgetConfigChanged', params );
-				}        
+				// if($scope.ngmModel){
+				// 	$scope.ngmModel.updateWidgets = function(params){
+				// 		$scope.$broadcast( 'widgetConfigChanged', params );
+				// 	}
+				// }
 
 				// Watching for changes on ngmModel
 				$scope.$watch('ngmModel', function(oldVal, newVal) {
