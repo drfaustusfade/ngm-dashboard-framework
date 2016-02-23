@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.2.2');
+  .value('ngmVersion', '0.2.3');
 
 /*
  * The MIT License
@@ -438,6 +438,7 @@ angular.module('ngm')
 				icon: '=',
 				color: '=',
 				hover: '=',
+				url: '=',
 				request: '=',
 				metrics: '='
 			},
@@ -459,15 +460,23 @@ angular.module('ngm')
 				// bind download event
 				el.bind( 'click', function($e) {
 
-					// open loading mask
-					$('#ngm-loading-modal').openModal({dismissible: false});
+					// if simple download url exists
+					if(scope.url){
 
-					// prepare download
-					download[scope.type](scope.request);
+						window.open(scope.url, '_blank');
 
-					// record metrics
-					if (scope.metrics) {
-						download.setMetrics(scope.metrics);
+					// else download process
+					} else {
+						// open loading mask
+						$('#ngm-loading-modal').openModal({dismissible: false});
+
+						// prepare download
+						download[scope.type](scope.request);
+
+						// record metrics
+						if (scope.metrics) {
+							download.setMetrics(scope.metrics);
+						}
 					}
 
 				});
@@ -1264,6 +1273,6 @@ angular.module('ngm')
 
 angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=col ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\">  <div class=row>  <h2 id=ngm-report-title class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\" ng-bind-html=model.header.title.title> </h2>  <div id=ngm-report-download class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" align=right ng-if=model.header.download> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large teal z-depth-2\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=data.hover filename=data.filename request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div>  <div class=row>  <p id=ngm-report-subtitle class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\" ng-bind-html=model.header.subtitle.title> </p>  <div id=ngm-report-datepicker class=\"{{ model.header.datePicker.class }}\" style=\"{{ model.header.datePicker.style }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=\"ngmDate-{{ $index }}\" type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
+$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\">  <div class=row>  <h2 id=ngm-report-title class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\" ng-bind-html=model.header.title.title> </h2>  <div id=ngm-report-download class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" align=right ng-if=model.header.download> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large teal z-depth-2\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=data.hover filename=data.filename url=data.url request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div>  <div class=row>  <p id=ngm-report-subtitle class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\" ng-bind-html=model.header.subtitle.title> </p>  <div id=ngm-report-datepicker class=\"{{ model.header.datePicker.class }}\" style=\"{{ model.header.datePicker.style }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=\"ngmDate-{{ $index }}\" type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
 $templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row> </div> </div> ");
 $templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\" style=\"{{ definition.style }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);

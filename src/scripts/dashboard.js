@@ -405,6 +405,7 @@ angular.module('ngm')
 				icon: '=',
 				color: '=',
 				hover: '=',
+				url: '=',
 				request: '=',
 				metrics: '='
 			},
@@ -426,15 +427,23 @@ angular.module('ngm')
 				// bind download event
 				el.bind( 'click', function($e) {
 
-					// open loading mask
-					$('#ngm-loading-modal').openModal({dismissible: false});
+					// if simple download url exists
+					if(scope.url){
 
-					// prepare download
-					download[scope.type](scope.request);
+						window.open(scope.url, '_blank');
 
-					// record metrics
-					if (scope.metrics) {
-						download.setMetrics(scope.metrics);
+					// else download process
+					} else {
+						// open loading mask
+						$('#ngm-loading-modal').openModal({dismissible: false});
+
+						// prepare download
+						download[scope.type](scope.request);
+
+						// record metrics
+						if (scope.metrics) {
+							download.setMetrics(scope.metrics);
+						}
 					}
 
 				});
