@@ -1,4 +1,4 @@
-<div ngm-id="{{column.cid}}" class="col" ng-class="column.styleClass" ng-model="column.widgets">
+<div ngm-id="{{column.cid}}" class="col {{column.styleClass}}" ng-class="column.styleClass" ng-model="column.widgets">
     <ngm-widget ng-repeat="definition in column.widgets"
                 definition="definition"
                 column="column"
