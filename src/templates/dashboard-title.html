@@ -26,7 +26,7 @@
 									type="data.type"
 									color="data.color"
 									icon="data.icon"
-									hover="data.hover"
+									hover="{{ data.hover }}"
 									filename="data.filename"
 									url="data.url"
 									request="data.request"
@@ -54,15 +54,16 @@
 			
 				<!-- date picker -->
 				<div id="ngmDateContainer-{{ $index }}" class="{{ date.class }}" style="{{ date.style }}">
-					<label for="ngmDate-{{ $index }}">{{ date.label }}</label>	
-					<input ngm-date 
-						id="ngmDate-{{ $index }}"
-						type="text" 
-						class="datepicker"
-						ng-model="date.time"
-						format="{{ date.format }}"
-						on-selection="date.onSelection()">
-					</input>
+					<label for="ngmDateLabel-{{ $index }}">{{ date.label }}</label>
+						<input ngm-date
+								id="ngmDatePicker-{{ $index }}"
+						    type="text"
+						    name="date.name"
+						    ng-model="date.currentTime"
+						    format="date.format"
+						    min="{{ date.min }}"
+						    max="{{ date.max }}"
+						    on-close="date.onClose()"/>
 				</div>
 			</div>
 		</div>

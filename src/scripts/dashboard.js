@@ -475,7 +475,7 @@ angular.module('ngm')
    * Type text is mandatory
    * Source: https://github.com/krescruz/angular-materialize/
    * Example:
-   <input input-date
+   <input ngm-date
       type="text"
       name="created"
       id="inputCreated"
@@ -497,7 +497,7 @@ angular.module('ngm')
       on-set="onSet()"
       on-stop="onStop()" />
    */
-  .directive('inputDate', ["$compile", "$timeout", function ($compile, $timeout) {
+  .directive('ngmDate', ["$compile", "$timeout", function ($compile, $timeout) {
       // Fix for issue 46. This gotta be a bug in the materialize code, but this fixes it.
       var style = $('<style>#inputCreated_root {outline: none;}</style>');
       $('html > head').append(style);
@@ -734,109 +734,4 @@ angular.module('ngm')
               }
           }
       };
-  }])
-	/**
-	 * Add pickadate directive
-	 * Type text is mandatory
-	 * Example:
-	 <input input-date
-			type="text"
-			name="created"
-			id="inputCreated"
-			ng-model="currentTime"
-			format="dd/mm/yyyy"
-			months-full="{{ monthFr }}"
-			months-short="{{ monthShortFr }}"
-			weekdays-full="{{ weekdaysFullFr }}"
-			weekdays-short="{{ weekdaysShortFr }}"
-			weekdays-letter="{{ weekdaysLetterFr }}"
-			disable="disable"
-			today="today"
-			clear="clear"
-			close="close"
-			on-start="onStart()"
-			on-render="onRender()"
-			on-open="onOpen()"
-			on-close="onClose()"
-			on-set="onSet()"
-			on-stop="onStop()" />
-	 */
-	 // source
-	 // https://github.com/krescruz/angular-materialize/
-	.directive('ngmDate', ['$compile', '$timeout', function ($compile, $timeout) { 
-
-		return {
-			require: 'ngModel',
-			scope: {
-					container: "@",
-					format: "@",
-					formatSubmit: "@",
-					monthsFull: "@",
-					monthsShort: "@",
-					weekdaysFull: "@",
-					weekdaysLetter: "@",
-					firstDay: "=",
-					disable: "=",
-					today: "=",
-					clear: "=",
-					close: "=",
-					selectYears: "=",
-					onStart: "&",
-					onRender: "&",
-					onOpen: "&",
-					onClose: "&",
-					onSet: "&",
-					onStop: "&",
-					onSelection: "&",
-					ngReadonly: "=?",
-					max: "@",
-					min: "@"
-			},
-			link: function ($scope, element, attrs, ngModel) {
-
-				// watch changes
-				$scope.$watch(function () {
-					return ngModel.$modelValue;
-				}, function(newValue, oldValue) {
-					if(angular.equals(newValue, oldValue)){
-						return; // simply skip that
-					} else {
-						if(angular.isDefined($scope.onSelection)){
-							$scope.onSelection();
-						}
-					}
-				});
-
-				// set element
-				$scope.$input = element.pickadate({
-			    selectMonths: true,
-			    selectYears: 15,
-			    format: (angular.isDefined($scope.format)) ? $scope.format : 'dd mmm, yyyy',
-					min: (angular.isDefined($scope.min)) ? $scope.min : undefined,
-					max: (angular.isDefined($scope.max)) ? $scope.max : undefined,			    
-					onStart: function(){
-						$timeout(function(){
-							// set time
-							var date = ngModel.$modelValue;
-							$scope.picker.set('select', [new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate()])
-						}, 10)
-					},			    
-					onSet: function(event){
-						// close on date select
-						if(event.select){
-							$scope.picker.close();
-						}
-					}
-			  });
-				
-				//pickadate API
-				$scope.picker = $scope.$input.pickadate('picker');
-
-				// open on click
-				element.bind('click', function($e) {
-					$scope.picker.open();
-				});
-
-			}
-		};
-	}]);
+  }]);

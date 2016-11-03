@@ -1,6 +1,6 @@
 {
   "name": "ngm-dashboard-framework",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "main": [
     "dist/ngm-dashboard-framework.js",
     "dist/ngm-dashboard-framework.css"
@@ -34,13 +34,15 @@
     "ngm"
   ],
   "dependencies": {
-    "angular": "1.4.2"
+    "angular": "1.4.2",
+    "materialize": "~0.97.7"
   },
   "devDependencies": {
     "angular-mocks": "1.4.2",
     "angular-scenario": "1.4.2",
     "angular-route": "1.4.2",
-    "es5-shim": "~2.0.8"
+    "es5-shim": "~2.0.8",
+    "materialize": "~0.97.7"
   },
   "resolutions": {
     "angular": "1.4.2"
