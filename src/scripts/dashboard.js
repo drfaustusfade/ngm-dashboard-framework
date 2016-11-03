@@ -398,7 +398,7 @@ angular.module('ngm')
 
 			replace: true,
 
-			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
+			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
 				type: '=',
