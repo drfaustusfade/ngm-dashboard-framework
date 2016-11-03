@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.2.5');
+  .value('ngmVersion', '0.2.7');
 
 /*
  * The MIT License
@@ -508,7 +508,7 @@ angular.module('ngm')
    * Type text is mandatory
    * Source: https://github.com/krescruz/angular-materialize/
    * Example:
-   <input input-date
+   <input ngm-date
       type="text"
       name="created"
       id="inputCreated"
@@ -530,7 +530,7 @@ angular.module('ngm')
       on-set="onSet()"
       on-stop="onStop()" />
    */
-  .directive('inputDate', ["$compile", "$timeout", function ($compile, $timeout) {
+  .directive('ngmDate', ["$compile", "$timeout", function ($compile, $timeout) {
       // Fix for issue 46. This gotta be a bug in the materialize code, but this fixes it.
       var style = $('<style>#inputCreated_root {outline: none;}</style>');
       $('html > head').append(style);
@@ -767,112 +767,7 @@ angular.module('ngm')
               }
           }
       };
-  }])
-	/**
-	 * Add pickadate directive
-	 * Type text is mandatory
-	 * Example:
-	 <input input-date
-			type="text"
-			name="created"
-			id="inputCreated"
-			ng-model="currentTime"
-			format="dd/mm/yyyy"
-			months-full="{{ monthFr }}"
-			months-short="{{ monthShortFr }}"
-			weekdays-full="{{ weekdaysFullFr }}"
-			weekdays-short="{{ weekdaysShortFr }}"
-			weekdays-letter="{{ weekdaysLetterFr }}"
-			disable="disable"
-			today="today"
-			clear="clear"
-			close="close"
-			on-start="onStart()"
-			on-render="onRender()"
-			on-open="onOpen()"
-			on-close="onClose()"
-			on-set="onSet()"
-			on-stop="onStop()" />
-	 */
-	 // source
-	 // https://github.com/krescruz/angular-materialize/
-	.directive('ngmDate', ['$compile', '$timeout', function ($compile, $timeout) { 
-
-		return {
-			require: 'ngModel',
-			scope: {
-					container: "@",
-					format: "@",
-					formatSubmit: "@",
-					monthsFull: "@",
-					monthsShort: "@",
-					weekdaysFull: "@",
-					weekdaysLetter: "@",
-					firstDay: "=",
-					disable: "=",
-					today: "=",
-					clear: "=",
-					close: "=",
-					selectYears: "=",
-					onStart: "&",
-					onRender: "&",
-					onOpen: "&",
-					onClose: "&",
-					onSet: "&",
-					onStop: "&",
-					onSelection: "&",
-					ngReadonly: "=?",
-					max: "@",
-					min: "@"
-			},
-			link: function ($scope, element, attrs, ngModel) {
-
-				// watch changes
-				$scope.$watch(function () {
-					return ngModel.$modelValue;
-				}, function(newValue, oldValue) {
-					if(angular.equals(newValue, oldValue)){
-						return; // simply skip that
-					} else {
-						if(angular.isDefined($scope.onSelection)){
-							$scope.onSelection();
-						}
-					}
-				});
-
-				// set element
-				$scope.$input = element.pickadate({
-			    selectMonths: true,
-			    selectYears: 15,
-			    format: (angular.isDefined($scope.format)) ? $scope.format : 'dd mmm, yyyy',
-					min: (angular.isDefined($scope.min)) ? $scope.min : undefined,
-					max: (angular.isDefined($scope.max)) ? $scope.max : undefined,			    
-					onStart: function(){
-						$timeout(function(){
-							// set time
-							var date = ngModel.$modelValue;
-							$scope.picker.set('select', [new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate()])
-						}, 10)
-					},			    
-					onSet: function(event){
-						// close on date select
-						if(event.select){
-							$scope.picker.close();
-						}
-					}
-			  });
-				
-				//pickadate API
-				$scope.picker = $scope.$input.pickadate('picker');
-
-				// open on click
-				element.bind('click', function($e) {
-					$scope.picker.open();
-				});
-
-			}
-		};
-	}]);
+  }]);
 
 /*
  * The MIT License
@@ -1538,6 +1433,6 @@ angular.module('ngm')
 
 angular.module("ngm").run(["$templateCache", function($templateCache) {$templateCache.put("../src/templates/dashboard-column.html","<div ngm-id={{column.cid}} class=\"col {{column.styleClass}}\" ng-class=column.styleClass ng-model=column.widgets> <ngm-widget ng-repeat=\"definition in column.widgets\" definition=definition column=column options=options widget-state=widgetState>  </ngm-widget></div> ");
 $templateCache.put("../src/templates/dashboard-row.html","<div class=row ng-class=row.styleClass>  </div> ");
-$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\">  <div class=row>  <h2 id=ngm-report-title class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\" ng-bind-html=model.header.title.title> </h2>  <div id=ngm-report-download class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" align=right ng-if=model.header.download> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large {{ model.header.download.btnColor }} z-depth-2\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=data.hover filename=data.filename url=data.url request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div>  <div class=row>  <p id=ngm-report-subtitle class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\" ng-bind-html=model.header.subtitle.title> </p>  <div id=ngm-report-datepicker class=\"{{ model.header.datePicker.class }}\" style=\"{{ model.header.datePicker.style }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmDate-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=\"ngmDate-{{ $index }}\" type=text class=datepicker ng-model=date.time format=\"{{ date.format }}\" on-selection=date.onSelection()> </div> </div> </div> </div> </div> ");
+$templateCache.put("../src/templates/dashboard-title.html"," <div class=\"{{ model.header.div.class }}\" style=\"{{ model.header.div.style }}\">  <div class=row>  <h2 id=ngm-report-title class=\"{{ model.header.title.class }}\" style=\"{{ model.header.title.style }}\" ng-bind-html=model.header.title.title> </h2>  <div id=ngm-report-download class=\"{{ model.header.download.class }}\" style=\"{{ model.header.download.style }}\" align=right ng-if=model.header.download> <div class=\"fixed-action-btn horizontal\" style=\"position: relative; display: inline-block; margin-top:66px;\"> <a class=\"btn-floating btn-large {{ model.header.download.btnColor }} z-depth-2\"> <i class=\"large material-icons\">cloud_download</i> </a> <ul>  <div>  <ngm-dashboard-download ng-repeat=\"data in model.header.download.downloads track by $index\" type=data.type color=data.color icon=data.icon hover=\"{{ data.hover }}\" filename=data.filename url=data.url request=data.request metrics=data.metrics> </ngm-dashboard-download> </div> </ul> </div> </div> </div>  <div class=row>  <p id=ngm-report-subtitle class=\"{{ model.header.subtitle.class }}\" style=\"{{ model.header.subtitle.style }}\" ng-bind-html=model.header.subtitle.title> </p>  <div id=ngm-report-datepicker class=\"{{ model.header.datePicker.class }}\" style=\"{{ model.header.datePicker.style }}\"> <div ng-repeat=\"date in model.header.datePicker.dates track by $index\">  <div id=\"ngmDateContainer-{{ $index }}\" class=\"{{ date.class }}\" style=\"{{ date.style }}\"> <label for=\"ngmDateLabel-{{ $index }}\">{{ date.label }}</label> <input ngm-date id=\"ngmDatePicker-{{ $index }}\" type=text name=date.name ng-model=date.currentTime format=date.format min=\"{{ date.min }}\" max=\"{{ date.max }}\" on-close=date.onClose()> </div> </div> </div> </div> </div> ");
 $templateCache.put("../src/templates/dashboard.html","<div class=dashboard-container> <div ng-include src=model.titleTemplateUrl></div> <div class=dashboard> <ngm-dashboard-row row=row ngm-model=model options=options ng-repeat=\"row in model.rows\"> </ngm-dashboard-row> </div> </div> ");
 $templateCache.put("../src/templates/widget.html","<div ngm-id=\"{{ definition.wid }}\" ngm-widget-type=\"{{ definition.type }}\" class=\"widget {{ definition.card }}\" style=\"{{ definition.style }}\"> <ngm-widget-content model=definition content=widget> </ngm-widget-content></div> ");}]);})(window);
