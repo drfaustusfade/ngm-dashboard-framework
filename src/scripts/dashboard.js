@@ -398,7 +398,7 @@ angular.module('ngm')
 
 			replace: true,
 
-			template: '<li><a class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
+			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
 				type: '=',
@@ -413,16 +413,18 @@ angular.module('ngm')
 			// onclick
 			link: function(scope, el, attr) {
 
-				// init tooltip
-				$('.tooltipped').tooltip({
-					tooltip: 'Download CSV'
-				});
-
 				// set defaults
 				scope.type = scope.type ? scope.type : 'csv';
 				scope.icon = scope.icon ? scope.icon : 'cloud_download';
 				scope.color = scope.color ? scope.color : 'blue';
 				scope.hover = scope.hover ? scope.hover : 'Download ' + scope.type.toUpperCase();
+
+				// init tooltip
+				$timeout(function(){
+					$('#' + scope.type + scope.icon ).tooltip({
+						tooltip: scope.hover
+					});
+				}, 0);
 				
 				// bind download event
 				el.bind( 'click', function($e) {
