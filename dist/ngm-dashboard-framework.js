@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.3.0');
+  .value('ngmVersion', '0.3.2');
 
 /*
  * The MIT License
@@ -360,7 +360,7 @@ angular.module('ngm')
 			}
 		};
 	})
-	.directive('ngmDashboardDownload', ['dashboard', 'ngmData',  function(dashboard, ngmData) {
+	.directive('ngmDashboardDownload', [ '$timeout', 'dashboard', 'ngmData',  function( $timeout, dashboard, ngmData ) {
 
 		// client side download    
 		var download = {
@@ -431,7 +431,7 @@ angular.module('ngm')
 
 			replace: true,
 
-			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50" data-tooltip="{{ hover }}"><i class="material-icons">{{ icon }}</i></a></li>',
+			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
 				type: '=',

@@ -327,7 +327,7 @@ angular.module('ngm')
 			}
 		};
 	})
-	.directive('ngmDashboardDownload', ['dashboard', 'ngmData',  function(dashboard, ngmData) {
+	.directive('ngmDashboardDownload', [ '$timeout', 'dashboard', 'ngmData',  function( $timeout, dashboard, ngmData ) {
 
 		// client side download    
 		var download = {
