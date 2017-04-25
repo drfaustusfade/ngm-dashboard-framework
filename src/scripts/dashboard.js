@@ -339,12 +339,12 @@ angular.module('ngm')
 					//
 					.then(function(csv){
 
-						// send CSV to client 
-						var csvHeader;
-						var type = 'data:text/csv;charset=utf-8';
+						// save as blob
+						var csvData = new Blob([ csv.data ], { type: 'text/csv' }); 
+						var csvUrl = URL.createObjectURL( csvData );
 
 						var el = document.createElement('a');
-							el.href = 'data:attachment/csv,' + encodeURIComponent(csv.data);
+							el.href =  csvUrl;
 							el.target = '_blank';
 							el.download = request.data.report + '.csv';
 
