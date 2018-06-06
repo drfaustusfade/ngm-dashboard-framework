@@ -621,8 +621,8 @@ angular.module('ngm')
 
       // For convenience...
       Date.prototype.format = function (mask, utc) {
-      		var utc = new Date(this).toISOString();
-          return dateFormat(utc, mask, utc);
+      		var this_utc = new Date(this).toISOString();
+          return dateFormat(this_utc, mask, utc);
       };
 
       /**

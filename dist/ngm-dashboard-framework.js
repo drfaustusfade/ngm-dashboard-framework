@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.3.3');
+  .value('ngmVersion', '0.3.5');
 
 /*
  * The MIT License
@@ -654,7 +654,8 @@ angular.module('ngm')
 
       // For convenience...
       Date.prototype.format = function (mask, utc) {
-          return dateFormat(this, mask, utc);
+      		var this_utc = new Date(this).toISOString();
+          return dateFormat(this_utc, mask, utc);
       };
 
       /**
