@@ -537,6 +537,10 @@ angular.module('ngm')
               date = date ? new Date(date) : new Date();
               if (isNaN(date)) throw SyntaxError("invalid date");
 
+              // force UTC
+              date = new Date( date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0 );
+
+              // mask?
               mask = String(dF.masks[mask] || mask || dF.masks["default"]);
 
               // Allow setting the utc argument via the mask
@@ -621,8 +625,7 @@ angular.module('ngm')
 
       // For convenience...
       Date.prototype.format = function (mask, utc) {
-      		var this_utc = new Date(this).toISOString();
-          return dateFormat(this_utc, mask, utc);
+          return dateFormat(this, mask, utc);
       };
 
       /**
