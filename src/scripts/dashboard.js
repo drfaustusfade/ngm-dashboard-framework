@@ -538,7 +538,7 @@ angular.module('ngm')
               if (isNaN(date)) throw SyntaxError("invalid date");
 
               // force UTC
-              date = new Date( date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0 );
+              date = new Date( date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() );
 
               // mask?
               mask = String(dF.masks[mask] || mask || dF.masks["default"]);
