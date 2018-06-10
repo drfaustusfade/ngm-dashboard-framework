@@ -29,7 +29,7 @@ angular.module('ngm', ['ngm.provider'])
   .value('ngmTemplatePath', '../src/templates/')
   .value('rowTemplate', '<ngm-dashboard-row row="row" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="row in column.rows" />')
   .value('columnTemplate', '<ngm-dashboard-column column="column" ngm-model="ngmModel" options="options" edit-mode="editMode" ng-repeat="column in row.columns" />')
-  .value('ngmVersion', '0.3.7');
+  .value('ngmVersion', '0.3.8');
 
 /*
  * The MIT License
@@ -571,7 +571,7 @@ angular.module('ngm')
               if (isNaN(date)) throw SyntaxError("invalid date");
 
               // force UTC
-              date = new Date( date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() );
+              date = new Date( date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0 );
 
               // mask?
               mask = String(dF.masks[mask] || mask || dF.masks["default"]);
