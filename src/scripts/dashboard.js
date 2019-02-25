@@ -52,8 +52,8 @@ angular.module('ngm')
 					.success(function(data){
 						deferred.resolve(data);
 					})
-					.error(function(){
-						deferred.reject();
+					.error(function(err){
+						deferred.reject(err);
 					});
 
 				return deferred.promise;
@@ -379,6 +379,23 @@ angular.module('ngm')
 						$('#ngm-loading-modal').closeModal();
 						// error msg						
 						Materialize.toast(data.error, 4000);
+					});
+			},
+
+			// download zip archive from link
+			'zip': function(request){
+				// get data
+				ngmData.get(request)
+					.then(function(response){
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+						// open in new tab
+						response.download_url ? window.open(response.download_url, '_blank') : Materialize.toast(response.message, 4000);
+					},function(err){
+						// close loading mask
+						$('#ngm-loading-modal').closeModal();
+						// error msg		
+						Materialize.toast(err.error.message, 4000);
 					});
 			},
 
