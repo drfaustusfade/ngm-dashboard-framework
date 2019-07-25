@@ -269,14 +269,14 @@ angular.module('ngm')
 			templateUrl: ngmTemplatePath + 'dashboard.html'
 		};
 	}])
-	// toggles accordian classes for 
+	// toggles accordian classes for
 	.directive('ngmMenu', function() {
 
 		return {
-			
+
 			// Restrict it to be an attribute in this case
 			restrict: 'A',
-			
+
 			// responsible for registering DOM listeners as well as updating the DOM
 			link: function(scope, el, attr) {
 
@@ -291,9 +291,9 @@ angular.module('ngm')
 
 							// set list header
 							$(d).closest('.bold').attr('class', 'bold active');
-							
+
 							// set z-depth-1
-							$(d).closest('.bold').find('a').attr('class', 
+							$(d).closest('.bold').find('a').attr('class',
 									$(d).closest('.bold').find('a').attr('class') + ' z-depth-1' );
 
 							// slide down list
@@ -307,10 +307,10 @@ angular.module('ngm')
 
 				// on element click
 				el.bind( 'click', function( $event ) {
-					
-					// toggle list 
+
+					// toggle list
 					el.toggleClass('active');
-					// toggle list 
+					// toggle list
 					el.find('.collapsible-header').toggleClass('z-depth-1');
 
 					// toggle list rows active
@@ -322,17 +322,17 @@ angular.module('ngm')
 					} else {
 						el.find('.collapsible-body').slideUp();
 					}
-					
+
 				});
 			}
 		};
 	})
 	.directive('ngmDashboardDownload', [ '$timeout', 'dashboard', 'ngmData',  function( $timeout, dashboard, ngmData ) {
 
-		// client side download    
+		// client side download
 		var download = {
-	
-			// prepare and stream CSV to client      
+
+			// prepare and stream CSV to client
 			'csv': function(request){
 				// get data
 				ngmData.get(request)
@@ -340,7 +340,7 @@ angular.module('ngm')
 					.then(function(csv){
 
 						// save as blob
-						var csvData = new Blob([ csv.data ], { type: 'text/csv' }); 
+						var csvData = new Blob([ csv.data ], { type: 'text/csv' });
 						var csvUrl = URL.createObjectURL( csvData );
 
 						var el = document.createElement('a');
@@ -359,13 +359,22 @@ angular.module('ngm')
 					},function(data){
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
-						// error msg						
+						// error msg
 						Materialize.toast(data.error, 4000);
-					});			
+					});
 			},
 
 			// client side PDF generation
 			'pdf': function(request){
+
+				// get width on runtime if no defined
+				if (!request.data.viewportWidth) {
+					request.data.viewportWidth = $(window).width();
+				}
+				// get height on runtime if no defined
+				if (!request.data.viewportHeight) {
+					request.data.viewportHeight = $(document).height();
+				}
 				// get data
 				ngmData.get(request)
 					//
@@ -377,7 +386,7 @@ angular.module('ngm')
 					},function(data){
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
-						// error msg						
+						// error msg
 						Materialize.toast(data.error, 4000);
 					});
 			},
@@ -394,7 +403,7 @@ angular.module('ngm')
 					},function(err){
 						// close loading mask
 						$('#ngm-loading-modal').closeModal();
-						// error msg		
+						// error msg
 						Materialize.toast(err.error.message, 4000);
 					});
 			},
@@ -409,7 +418,7 @@ angular.module('ngm')
 		}
 
 		return {
-			
+
 			// element or attrbute
 			restrict: 'EA',
 
@@ -442,7 +451,7 @@ angular.module('ngm')
 						tooltip: scope.hover
 					});
 				}, 0);
-				
+
 				// bind download event
 				el.bind( 'click', function($e) {
 
