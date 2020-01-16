@@ -354,11 +354,13 @@ angular.module('ngm')
 						el.remove();
 
 						// close loading mask
-						$('#ngm-loading-modal').closeModal();
+						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal('close');
 
 					},function(data){
 						// close loading mask
-						$('#ngm-loading-modal').closeModal();
+						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(data.error, 4000);
 					});
@@ -380,12 +382,14 @@ angular.module('ngm')
 					//
 					.then(function(response){
 						// close loading mask
-						$('#ngm-loading-modal').closeModal();
+						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal('close');
 						// open in new tab
 						window.open(request.data.downloadUrl + response.report, '_blank');
 					},function(data){
 						// close loading mask
-						$('#ngm-loading-modal').closeModal();
+						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(data.error, 4000);
 					});
@@ -397,12 +401,14 @@ angular.module('ngm')
 				ngmData.get(request)
 					.then(function(response){
 						// close loading mask
-						$('#ngm-loading-modal').closeModal();
+						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal('close');
 						// open in new tab
 						response.download_url ? window.open(response.download_url, '_blank') : Materialize.toast(response.message, 4000);
 					},function(err){
 						// close loading mask
-						$('#ngm-loading-modal').closeModal();
+						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(err.error.message, 4000);
 					});
@@ -463,7 +469,9 @@ angular.module('ngm')
 					// else download process
 					} else {
 						// open loading mask
-						$('#ngm-loading-modal').openModal({dismissible: false});
+						// $('#ngm-loading-modal').openModal({dismissible: false});
+						$('#ngm-loading-modal').modal({ dismissible: false });
+						$('#ngm-loading-modal').modal('open');
 
 						// prepare download
 						download[scope.type](scope.request);
@@ -739,27 +747,34 @@ angular.module('ngm')
                       if (!scope.container) {
                           delete options.container;
                       }
-                      var pickadateInput = element.pickadate(options);
+					//   var pickadateInput = element.pickadate(options);
+					  var instance = M.Datepicker.init(element, options);
                       //pickadate API
-                      var picker = pickadateInput.pickadate('picker');
+					//   var picker = pickadateInput.pickadate('picker');
+					  var picker = M.Datepicker.getInstance(element);
+					  picker.setDate(element[0].value)
+					  picker.options.setDefaultDate = true;
 
                       //watcher of min, max, and disabled dates
                       scope.$watch('max', function(newMax) {
                           if( picker ) {
                               var maxDate = new Date(newMax);
-                              picker.set({max: isValidDate(maxDate) ? maxDate : false});
+							//   picker.set({max: isValidDate(maxDate) ? maxDate : false});
+							  picker.options.maxDate = isValidDate(maxDate) ? maxDate : false;
                           }
                       });
                       scope.$watch('min', function(newMin) {
                           if( picker ) {
                               var minDate = new Date(newMin);
-                              picker.set({min: isValidDate(minDate) ? minDate : false});
+							//   picker.set({min: isValidDate(minDate) ? minDate : false});
+							  picker.options.minDate = isValidDate(minDate) ? minDate : false;
                           }
                       });
                       scope.$watch('disable', function(newDisabled) {
                           if( picker ) {
                               var disabledDates = angular.isDefined(newDisabled) && angular.isArray(newDisabled) ? newDisabled : false;
-                              picker.set({disable: disabledDates});
+							//   picker.set({disable: disabledDates});
+							  picker.options.disableDayFn = disabledDates;
                           }
                       });
                   });
