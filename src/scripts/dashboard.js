@@ -355,11 +355,13 @@ angular.module('ngm')
 
 						// close loading mask
 						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal({ dismissible: false });
 						$('#ngm-loading-modal').modal('close');
 
 					},function(data){
 						// close loading mask
 						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal({ dismissible: false });
 						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(data.error, 4000);
@@ -383,12 +385,14 @@ angular.module('ngm')
 					.then(function(response){
 						// close loading mask
 						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal({ dismissible: false });
 						$('#ngm-loading-modal').modal('close');
 						// open in new tab
 						window.open(request.data.downloadUrl + response.report, '_blank');
 					},function(data){
 						// close loading mask
 						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal({ dismissible: false });
 						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(data.error, 4000);
@@ -402,12 +406,14 @@ angular.module('ngm')
 					.then(function(response){
 						// close loading mask
 						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal({ dismissible: false });
 						$('#ngm-loading-modal').modal('close');
 						// open in new tab
 						response.download_url ? window.open(response.download_url, '_blank') : Materialize.toast(response.message, 4000);
 					},function(err){
 						// close loading mask
 						// $('#ngm-loading-modal').closeModal();
+						$('#ngm-loading-modal').modal({ dismissible: false });
 						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(err.error.message, 4000);
