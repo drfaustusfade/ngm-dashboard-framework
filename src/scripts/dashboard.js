@@ -425,7 +425,7 @@ angular.module('ngm')
 
 			replace: true,
 
-			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-delay="50"><i class="material-icons">{{ icon }}</i></a></li>',
+			template: '<li><a id="{{ type + icon }}" class="btn-floating {{ color }} z-depth-2 tooltipped" data-position="bottom" data-tooltip="{{ hover }}" data-delay="50"><i class="material-icons">{{ icon }}</i></a></li>',
 
 			scope: {
 				type: '=',
@@ -448,9 +448,7 @@ angular.module('ngm')
 
 				// init tooltip
 				$timeout(function(){
-					$('#' + scope.type + scope.icon ).tooltip({
-						tooltip: scope.hover
-					});
+					$('#' + scope.type + scope.icon ).tooltip();
 				}, 0);
 
 				// bind download event
