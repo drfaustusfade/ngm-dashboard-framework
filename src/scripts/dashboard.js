@@ -344,7 +344,7 @@ angular.module('ngm')
 			}
 		};
 	})
-	.directive('ngmDashboardDownload', [ '$timeout', 'dashboard', 'ngmData',  function( $timeout, dashboard, ngmData ) {
+	.directive('ngmDashboardDownload', [ '$timeout', 'dashboard', 'ngmData', 'ngmDataSteam',  function( $timeout, dashboard, ngmData, ngmDataSteam ) {
 
 		// client side download
 		var download = {
@@ -379,6 +379,55 @@ angular.module('ngm')
 						$('#ngm-loading-modal').modal('close');
 						// error msg
 						Materialize.toast(data.error, 4000);
+					});
+			},
+
+			// prepare and stream XLSX to client
+			'xlsx': function(request){
+				// get data
+				ngmDataSteam.get(request)
+					.then(function(response){
+
+						var filename = "";
+						var disposition = response.headers('Content-Disposition');
+						var contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+						// var contentType = xlsx.headers('Content-Type');
+
+						if (disposition && disposition.indexOf('attachment') !== -1) {
+								var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+								var matches = filenameRegex.exec(disposition);
+								if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+						}
+
+						// save as blob
+						var xlsxData = new Blob([ response.data ], { type: contentType });
+						var xlsxUrl = URL.createObjectURL( xlsxData );
+
+						var el = document.createElement('a');
+							el.href =  xlsxUrl;
+
+						if (request.data) {
+							filename = request.data.report ? request.data.report + '.xlsx' : filename;
+						}
+						if (request.params) {
+							filename = request.params.report ? request.params.report + '.xlsx' : filename;
+						}
+
+						el.download = filename
+
+						// append, download & remove
+						document.body.appendChild(el);
+						el.click();
+						el.remove();
+
+						// close loading mask
+						$('#ngm-loading-modal').modal('close');
+
+					},function(data){
+						// close loading mask
+						$('#ngm-loading-modal').modal('close');
+						// error msg
+						M.toast({ html: data.statusText, displayLength: 4000 });
 					});
 			},
 
