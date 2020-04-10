@@ -60,6 +60,23 @@ angular.module('ngm')
 			}
 		};
 	}])
+	.service('ngmDataSteam', ['$q', '$http', function($q, $http){
+		return {
+			get: function(request){
+				var deferred = $q.defer();
+				request.responseType = 'arraybuffer';
+				$http(request)
+					.then(function onSuccess(response) {
+						deferred.resolve(response);
+					})
+					.catch(function onError(err) {
+						deferred.reject(err);
+					})
+
+				return deferred.promise;
+			}
+		};
+	}])
 	.directive('ngmDashboard', ['$rootScope', '$log', '$sce', 'dashboard', 'ngmTemplatePath', function ($rootScope, $log, $sce, dashboard, ngmTemplatePath) {
 		'use strict';
 
