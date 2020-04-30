@@ -475,6 +475,25 @@ angular.module('ngm')
 					});
 			},
 
+			// download client side
+			'client': function(request){
+				request.function().then(function (data) {
+					var blob = new Blob([data], { type: request.mimetype ? request.mimetype : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+					var fUrl = URL.createObjectURL( blob );
+					var el = document.createElement('a');
+					el.href =  fUrl;
+					el.download = request.filename ? request.filename : 'Data';
+					// append, download & remove
+					document.body.appendChild(el);
+					el.click();
+					el.remove();
+					$('#ngm-loading-modal').modal('close');
+				}, function () {
+					$('#ngm-loading-modal').modal('close');
+					M.toast({ html: 'Download Error!', displayLength: 4000 });
+				});
+			},
+
 			// writes metrics to rest api
 			'setMetrics': function(request){
 				ngmData.get(request)
