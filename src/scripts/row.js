@@ -25,7 +25,7 @@
 
 /* global angular */
 angular.module('ngm')
-  .directive('ngmDashboardRow', function ($compile, ngmTemplatePath, columnTemplate) {
+  .directive('ngmDashboardRow', ['$compile', 'ngmTemplatePath', 'columnTemplate', function ($compile, ngmTemplatePath, columnTemplate) {
     'use strict';
 
     return {
@@ -46,4 +46,4 @@ angular.module('ngm')
         }
       }
     };
-  });
+  }]);

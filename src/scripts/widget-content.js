@@ -25,7 +25,8 @@
 'use strict';
 
 angular.module('ngm')
-  .directive('ngmWidgetContent', function($log, $q, $sce, $http, $templateCache,
+  .directive('ngmWidgetContent', [ '$log', '$q', '$sce', '$http', '$templateCache',
+    '$compile', '$controller', '$injector', 'dashboard', function($log, $q, $sce, $http, $templateCache,
     $compile, $controller, $injector, dashboard) {
 
     function parseUrl(url){
@@ -53,12 +54,12 @@ angular.module('ngm')
         } else {
           var url = $sce.getTrustedResourceUrl(parseUrl(widget.templateUrl));
           $http.get(url)
-            .success(function(response){
+            .then(function(response){
               // put response to cache, with unmodified url as key
-              $templateCache.put(widget.templateUrl, response);
-              deferred.resolve(response);
+              $templateCache.put(widget.templateUrl, response.data);
+              deferred.resolve(response.data);
             })
-            .error(function(){
+            .catch(function(){
               deferred.reject('could not load template');
             });
         }
@@ -163,4 +164,4 @@ angular.module('ngm')
       }
     };
 
-  });
+  }]);

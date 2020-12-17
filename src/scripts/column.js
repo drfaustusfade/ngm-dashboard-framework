@@ -25,7 +25,7 @@
 
 /* global angular */
 angular.module('ngm')
-  .directive('ngmDashboardColumn', function ($log, $compile, ngmTemplatePath, rowTemplate, dashboard) {
+  .directive('ngmDashboardColumn', [ '$log', '$compile', 'ngmTemplatePath', 'rowTemplate', 'dashboard', function ($log, $compile, ngmTemplatePath, rowTemplate, dashboard) {
     'use strict';
 
     /**
@@ -96,4 +96,4 @@ angular.module('ngm')
         });
       }
     };
-  });
+  }]);

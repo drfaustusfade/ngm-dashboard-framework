@@ -25,7 +25,7 @@
 'use strict';
 
 angular.module('ngm')
-  .directive('ngmWidget', function($log, dashboard, ngmTemplatePath) {
+  .directive('ngmWidget', ['$log', 'dashboard', 'ngmTemplatePath', function($log, dashboard, ngmTemplatePath) {
 
     function preLink($scope){
       var definition = $scope.definition;
@@ -93,9 +93,9 @@ angular.module('ngm')
         widgetState: '='
       },
 
-      controller: function ($scope) {
-        // 
-      },
+      controller: [ '$scope', function ($scope) {
+        //
+      }],
 
       compile: function compile(){
 
@@ -110,4 +110,4 @@ angular.module('ngm')
       }
     };
 
-  });
+  }]);

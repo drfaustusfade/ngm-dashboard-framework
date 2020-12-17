@@ -84,6 +84,12 @@ gulp.task('css', function(){
       .pipe(gulp.dest('dist/'));
 });
 
+// var annotateOptions = {
+//   enable: [
+//     'ngm-dashboard-framework'
+//   ]
+// };
+
 gulp.task('js', function(){
   gulp.src([
         'src/scripts/ngm.js',
@@ -99,9 +105,10 @@ gulp.task('js', function(){
       .pipe($.if('*.html', $.angularTemplatecache(name + '.tpl.js', templateOptions)))
       .pipe($.sourcemaps.init())
       .pipe($.if('*.js', $.replace('<<ngmVersion>>', pkg.version)))
-      .pipe($.if('*.js', $.replace(/'use strict';/g, '')))
+			.pipe($.if('*.js', $.replace(/'use strict';/g, '')))
       .pipe($.concat(name + '.js'))
-      .pipe($.headerfooter('(function(window, undefined) {\'use strict\';\n', '})(window);'))
+			.pipe($.headerfooter('(function(window, undefined) {\'use strict\';\n', '})(window);'))
+			// .pipe($.if('.js', $.ngAnnotate(annotateOptions)))
       .pipe(gulp.dest('dist/'))
       .pipe($.rename(name + '.min.js'))
       .pipe($.uglify())

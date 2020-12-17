@@ -49,11 +49,11 @@ angular.module('ngm')
 			get: function(request){
 				var deferred = $q.defer();
 				$http(request)
-					.success(function(data){
-						deferred.resolve(data);
+					.then(function(response){
+						deferred.resolve(response.data);
 					})
-					.error(function(err){
-						deferred.reject(err);
+					.catch(function(response){
+						deferred.reject(response.data);
 					});
 
 				return deferred.promise;
@@ -216,7 +216,7 @@ angular.module('ngm')
 				ngmModel: '=',
 				ngmWidgetFilter: '='
 			},
-			controller: function($scope){
+			controller: ['$scope', function($scope){
 				var model = {};
 				var structure = {};
 				var widgetFilter = null;
@@ -269,7 +269,7 @@ angular.module('ngm')
 				$scope.editMode = false;
 				$scope.editClass = '';
 
-			},
+			}],
 			link: function ($scope, $element, $attr) {
 				// pass options to scope
 				var options = {
@@ -378,7 +378,7 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').modal('close');
 						// error msg
-						Materialize.toast(data.error, 4000);
+						M.toast(data.error, 4000);
 					});
 			},
 
@@ -454,7 +454,7 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').modal('close');
 						// error msg
-						Materialize.toast(data.error, 4000);
+						M.toast(data.error, 4000);
 					});
 			},
 
@@ -466,12 +466,12 @@ angular.module('ngm')
 						// close loading mask
 						$('#ngm-loading-modal').modal('close');
 						// open in new tab
-						response.download_url ? window.open(response.download_url, '_blank') : Materialize.toast(response.message, 4000);
+						response.download_url ? window.open(response.download_url, '_blank') : M.toast(response.message, 4000);
 					},function(err){
 						// close loading mask
 						$('#ngm-loading-modal').modal('close');
 						// error msg
-						Materialize.toast(err.error.message, 4000);
+						M.toast(err.error.message, 4000);
 					});
 			},
 

@@ -24,7 +24,7 @@
     "protractor.conf.js"
   ],
   "location": "https://github.com/pfitzpaddy/ngm-dashboard-framework",
-  "licence": "MIT",  
+  "licence": "MIT",
   "keywords": [
     "dashboard",
     "angular",
@@ -34,17 +34,18 @@
     "ngm"
   ],
   "dependencies": {
-    "angular": "1.4.2",
-    "materialize": "~0.97.7"
+    "angular": "1.8.2",
+		"materialize": "~1.0.0",
+		"angular-filter-count-to": "~0.0.3"
   },
   "devDependencies": {
-    "angular-mocks": "1.4.2",
-    "angular-scenario": "1.4.2",
-    "angular-route": "1.4.2",
+    "angular-mocks": "1.8.2",
+    "angular-scenario": "1.8.2",
+    "angular-route": "1.8.2",
     "es5-shim": "~2.0.8",
-    "materialize": "~0.97.7"
+    "materialize": "~1.0.0"
   },
   "resolutions": {
-    "angular": "1.4.2"
+    "angular": "1.4.8"
   }
 }
